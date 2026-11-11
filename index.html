@@ -144,6 +144,11 @@ h2 small{font-weight:400;letter-spacing:0;text-transform:none;color:var(--ink-so
   #detail .facts{grid-template-columns:1fr;gap:2px}
   #detail .facts b{padding-top:10px}
 }
+/* one small "saving…" pill for every change made anywhere on the site */
+.gsync{position:fixed;right:18px;bottom:18px;z-index:8;display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:999px;background:#fff;border:1px solid var(--line);box-shadow:0 6px 18px rgba(0,0,0,.12);font:600 11.5px Arial,Helvetica,sans-serif;letter-spacing:.03em;color:var(--ink-soft);opacity:0;transform:translateY(10px);transition:opacity .35s,transform .35s;pointer-events:none}
+.gsync.on,.gsync.ok,.gsync.bad{opacity:1;transform:none}.gsync.ok{color:var(--ok)}.gsync.bad{color:var(--bad)}
+.gsync i{width:7px;height:7px;border-radius:50%;background:var(--gilt);animation:pulse 1s ease-in-out infinite}
+.pending{opacity:.6;transition:opacity .4s}
 .hidden{display:none!important}
 img.wait{opacity:0}
 .face img,.photo img{transition:opacity .35s}
@@ -310,6 +315,7 @@ img.wait{opacity:0}
   </div>
 </main>
 <div class="toast" id="toast"></div>
+<div class="gsync" id="gsync"></div>
 
 <!-- birthday picker -->
 <div class="modal" id="bdModal">
@@ -339,6 +345,51 @@ const run = (fn, ...args) => {
     .then(r => { if (!r.ok) throw new Error(r.e || 'Something went wrong.'); return r.v; });
 };
 function toast(msg, bad) { const t = $('#toast'); t.textContent = msg; t.className = 'toast show' + (bad ? ' bad' : ''); clearTimeout(t._h); t._h = setTimeout(() => t.className = 'toast', 3200); }
+
+/* ---------- every change shows on screen at once; the sheet catches up in the background, one change after another.
+   A small pill (bottom right) says "saving…" → "✓ saved"; if the sheet refuses, the screen goes back and says why. ---------- */
+const IDMAP = {}, SRV = {}, TLAST = {};     /* temporary id → real id · subject ids the sheet has, per teacher · newest teacher copy from the sheet */
+let SQ = Promise.resolve(), SPEND = 0, SFAIL = false, TFAIL = false;
+const realId = id => IDMAP[id] || id;
+const sortSubs = x => x.subjects.sort((a, b) => (a.year || 9) - (b.year || 9) || a.subject.localeCompare(b.subject));
+let SSTATE = '';
+function syncMark(state) {
+  state = state === undefined ? SSTATE : (SSTATE = state);
+  const html = state === 'on' ? '<i></i>saving…' : state === 'ok' ? '✓ saved' : state === 'bad' ? 'not saved — try again' : '';
+  ['#tsync', '#gsync'].forEach(q => { const el = $(q); if (el) { el.className = (q === '#gsync' ? 'gsync ' : 'sync ') + state; el.innerHTML = html; } });
+}
+function bg(call, ok, fail) {
+  SPEND++; syncMark('on');
+  SQ = SQ.then(call).then(r => { if (ok) ok(r); })
+    .catch(e => { SFAIL = true; toast('Not saved: ' + (e.message || e), true); if (fail) try { fail(e); } catch (x) { } })
+    .finally(() => {
+      if (--SPEND) return;
+      const failed = SFAIL; SFAIL = false; drainTeachers();
+      syncMark(failed ? 'bad' : 'ok');
+      clearTimeout(syncMark.t); syncMark.t = setTimeout(() => { if (!SPEND) syncMark(''); }, failed ? 3500 : 1800);
+    });
+}
+/* teachers: once nothing is waiting, take the sheet's copy (or reload all of them if something failed) */
+function drainTeachers() {
+  if (TFAIL) { TFAIL = false; run('apiTeachers').then(d => { if (d && d.teachers) { TDATA = d; rememberT(); renderTeachers(); if (TSEL && !busyT()) renderTPanel(); } }).catch(() => { }); return; }
+  const codes = Object.keys(TLAST); if (!codes.length) return;
+  codes.forEach(c => { const r = TLAST[c], old = teacher(c); if (old && old.wrote && !r.wrote) r.wrote = old.wrote; putTeacher(r); delete TLAST[c]; });
+  renderTeachers(); if (TSEL && codes.includes(TSEL) && !busyT() && !TEDIT) renderTPanel();
+}
+function subjOp(code, mutate, call, tmp) {
+  const t = teacher(code); if (!t) return;
+  if (!SRV[code]) SRV[code] = new Set(t.subjects.filter(s => !/^tmp/.test(s.id)).map(s => s.id));
+  mutate(t); rememberT(); renderTeachers();
+  if (TSEL === code) settle($('#tpanel'), renderTPanel);
+  bg(call, r => {
+    if (tmp) {                                        /* learn the real id of the row just added */
+      const nid = (r.subjects || []).map(s => s.id).find(id => !SRV[code].has(id));
+      if (nid) { IDMAP[tmp] = nid; const s = (teacher(code) || { subjects: [] }).subjects.find(s => s.id === tmp); if (s) s.id = nid;
+        const row = document.querySelector(`#tpanel .srow[data-id="${tmp}"]`); if (row) row.dataset.id = nid; }
+    }
+    SRV[code] = new Set((r.subjects || []).map(s => s.id)); TLAST[code] = r;
+  }, () => { TFAIL = true; });
+}
 const initials = s => (s || '?').split(/\s+/).slice(0, 2).map(x => x[0]).join('').toUpperCase();
 /* photos: try the Drive link; if Drive refuses (visitor not signed in to Google, e.g. incognito), try Google's image
    server, and if that fails too, ask the script for the photo itself (it runs as the owner, so it can always read it) */
@@ -492,9 +543,9 @@ function renderPanel() {
   const on = (id, f) => { const el = $('#' + id); if (el) el.onclick = f; };
   const adder = (kind, fn, key) => on(kind + 'Add', async () => {
     const lines = $('#' + kind + 'New').value.split('\n').map(x => x.trim()).filter(Boolean); if (!lines.length) return toast('Write at least one line.', true);
-    $('#' + kind + 'Add').disabled = true;
-    try { PROFILE[key] = await run(fn, p.id, lines); keep(PROFILE); toast('Added ' + lines.length + ' to ' + (p.display_name || p.id) + "'s " + (key === 'dreams' ? 'dreams' : 'playlist')); renderPanel(); }
-    catch (e) { toast(e.message || String(e), true); $('#' + kind + 'Add').disabled = false; }
+    const pr = PROFILE; pr[key] = lines; keep(pr); renderPanel();
+    bg(() => run(fn, pr.id, lines), r => { pr[key] = r; keep(pr); if (PROFILE === pr && !busyP()) renderPanel(); },
+      () => { pr[key] = []; keep(pr); if (PROFILE === pr) { renderPanel(); const b = $('#' + kind + 'New'); if (b) b.value = lines.join('\n'); } });
   });
   adder('dream', 'apiAddDreams', 'dreams'); adder('song', 'apiAddSongs', 'songs');
   const bd = $('#panel input.bday'); if (bd) bd.onclick = () => openBirthday(bd);
@@ -502,12 +553,11 @@ function renderPanel() {
   on('cancel', () => { EDIT = false; renderPanel(); });
   const pf = $('#photoFile'); if (pf) pf.onchange = async () => {
     const f = pf.files[0]; if (!f) return;
-    try {
-      toast('Preparing the photo…');
-      const dataUrl = await shrinkImage(f, 600, 750);          /* keep uploads small: 4:5 at most 600 × 750 */
-      const r = await run('apiUploadPhoto', p.id, dataUrl);
-      PROFILE.photo_url = r.url; keep(PROFILE); await refresh(); renderPanel(); toast('Photo added for ' + (p.display_name || p.id));
-    } catch (e) { toast(e.message || String(e), true); }
+    let dataUrl; try { dataUrl = await shrinkImage(f, 600, 750); } catch (e) { return toast(e.message || String(e), true); }   /* 4:5 at most 600 × 750 */
+    const pr = PROFILE, st = student(pr.id);                 /* the picture shows at once; the upload runs behind it */
+    PHOTO[pr.id] = dataUrl; NOPHOTO.delete(pr.id); pr.photo_url = dataUrl; st.photo = dataUrl; keep(pr); renderPanel(); renderFaces();
+    bg(() => run('apiUploadPhoto', pr.id, dataUrl), r => { pr.photo_url = r.url; st.photo = r.url; keep(pr); refresh().catch(() => { }); },
+      () => { delete PHOTO[pr.id]; pr.photo_url = ''; st.photo = ''; keep(pr); renderFaces(); if (PROFILE === pr) renderPanel(); });
   };
   const inl = [...document.querySelectorAll('#panel .inline')];
   const quickVis = () => { const q = $('#quick'); if (q) q.classList.toggle('hidden', !inl.some(el => el.value.trim())); };
@@ -515,32 +565,36 @@ function renderPanel() {
   on('quick', async () => {
     const fields = {}; inl.forEach(el => { if (el.value.trim()) fields[el.dataset.q] = el.value.trim(); });
     if (!Object.keys(fields).length) return;
-    $('#quick').disabled = true;
-    try { PROFILE = await run('apiSaveProfile', p.id, fields); keep(PROFILE); await refresh(); renderPanel(); toast('Added ' + Object.keys(fields).map(k => LABELS[k].toLowerCase()).join(', ') + ' for ' + (PROFILE.display_name || p.id)); }
-    catch (e) { toast(e.message || String(e), true); $('#quick').disabled = false; }
+    saveProfile(fields);
   });
   on('save', async () => {
     const fields = {}; document.querySelectorAll('#panel [data-k]').forEach(el => fields[el.dataset.k] = el.value);
-    $('#save').disabled = true;
-    try { PROFILE = await run('apiSaveProfile', p.id, fields); keep(PROFILE); await refresh(); EDIT = false; renderPanel(); toast('Saved ' + (PROFILE.display_name || p.id)); }
-    catch (e) { toast(e.message || String(e), true); $('#save').disabled = false; }
+    EDIT = false; saveProfile(fields);
   });
   $('#panel').querySelectorAll('.opt').forEach(b => b.onclick = () => { const y = +b.dataset.y; CHOICES[y] = CHOICES[y] === b.dataset.s ? '' : b.dataset.s; renderPanel(); });
   on('sClear', () => { CHOICES = {}; renderPanel(); });
   on('sSubmit', async () => {
     const send = {}; [1, 2, 3, 4].forEach(y => { if (CHOICES[y] && CHOICES[y] !== have[y]) send[y] = CHOICES[y]; });
     if (!Object.keys(send).length) return toast('Nothing new to save — tap a section first.', true);
-    $('#sSubmit').disabled = true;
-    try {
-      const r = await run('apiSaveSections', p.id, send);
-      DATA.yearSections[p.id] = Object.assign({}, have, send); PROFILE.years = Object.assign({}, PROFILE.years, send); keep(PROFILE);
-      if (send[4]) { PROFILE.section = send[4]; await refresh(); }
-      toast('Saved ' + r.written + ' section' + (r.written === 1 ? '' : 's') + ' for ' + (p.display_name || p.id));
-      renderFaces(); renderPanel();
-    } catch (e) { toast(e.message || String(e), true); renderPanel(); }
+    const pr = PROFILE, before = { ys: Object.assign({}, have), years: Object.assign({}, pr.years), section: pr.section };
+    DATA.yearSections[pr.id] = Object.assign({}, have, send); pr.years = Object.assign({}, pr.years, send); if (send[4]) pr.section = send[4]; keep(pr);
+    renderFaces(); renderPanel();
+    bg(() => run('apiSaveSections', pr.id, send), () => { if (send[4]) refresh().catch(() => { }); },
+      () => { DATA.yearSections[pr.id] = before.ys; pr.years = before.years; pr.section = before.section; keep(pr); renderFaces(); if (PROFILE === pr) renderPanel(); });
   });
 }
 
+/* a profile change: on screen now, in the sheet a moment later; if the sheet refuses, the old values come back */
+function saveProfile(fields) {
+  const pr = PROFILE, old = Object.assign({}, pr);
+  Object.keys(fields).forEach(k => pr[k] = fields[k]);
+  if (fields.first_name !== undefined || fields.last_name !== undefined) pr.full_name = [pr.first_name, pr.middle_name, pr.last_name].filter(Boolean).join(' ');
+  keep(pr); renderFaces(); renderPanel();
+  bg(() => run('apiSaveProfile', pr.id, fields),
+    r => { keep(r); if (PROFILE && PROFILE.id === r.id) { PROFILE = r; if (!busyP() && !EDIT) renderPanel(); } refresh().catch(() => { }); },
+    () => { keep(old); if (PROFILE && PROFILE.id === old.id) { PROFILE = old; EDIT = false; renderPanel(); } renderFaces(); });
+}
+const busyP = () => { const a = document.activeElement; return !!(a && a.closest && a.closest('#panel') && /INPUT|TEXTAREA/.test(a.tagName) && a.value); };
 /* ---------- photo upload helper: downsize in the browser, send as JPEG ---------- */
 function shrinkImage(file, maxW, maxH) {
   return new Promise((res, rej) => {
@@ -668,12 +722,10 @@ function chooseMe(id, jump) {
     ta.oninput = () => { const n = (ta.value.trim().match(/\S+/g) || []).length; $('#msgCount').textContent = n + (n === 1 ? ' word' : ' words'); };
     $('#msgSave').onclick = async () => {
       const text = ta.value.trim(); if (!text) { toast('Write your message first.', true); return; }
-      const b = $('#msgSave'); b.disabled = true;
-      try {
-        await run('apiSaveMessage', ME, text, DEVICE, navigator.userAgent, FP);
-        lockMe(ME); (DATA.hasMessage = DATA.hasMessage || {})[ME] = true; if (DATA.profiles && DATA.profiles[ME]) DATA.profiles[ME].message_to_batch = text; remember(DATA);
-        toast('Saved. Thank you, ' + student(ME).display + '.'); chooseMe(ME);
-      } catch (e) { toast(e.message || String(e), true); b.disabled = false; }
+      const me = ME, pr = DATA.profiles && DATA.profiles[me];
+      (DATA.hasMessage = DATA.hasMessage || {})[me] = true; if (pr) pr.message_to_batch = text; remember(DATA); chooseMe(me);
+      bg(() => run('apiSaveMessage', me, text, DEVICE, navigator.userAgent, FP), () => lockMe(me),
+        () => { DATA.hasMessage[me] = false; if (pr) pr.message_to_batch = ''; remember(DATA); if (ME === me) { chooseMe(me); const t2 = $('#msgText'); if (t2) t2.value = text; } });
     };
   }
   $('#s3').classList.remove('hidden'); renderStep3();
@@ -704,14 +756,12 @@ function renderEditor() {
   $('#tCancel').onclick = () => { TO = null; $('#editor').innerHTML = '<div class="empty" style="padding:30px 10px">Pick a batchmate on the left, then write.</div>'; renderStep3(); };
   $('#tSend').onclick = async () => {
     const text = ta.value.trim(); if (!text) { toast('Write the testimonial first.', true); return; }
-    const b = $('#tSend'); b.disabled = true; $('#tCancel').disabled = true;
-    try {
-      const r = await run('apiAddTestimonial', TO, ME, text, DEVICE, navigator.userAgent, FP);
-      lockMe(ME); (GIVEN_LOCAL[ME] = GIVEN_LOCAL[ME] || []).push(TO);
-      toast('Sent to ' + r.about + '. Salamat!'); const done = TO; TO = null;
-      $('#editor').innerHTML = `<div class="empty" style="padding:30px 10px">Your testimonial for ${esc(student(done).display)} is in. Pick the next batchmate.</div>`;
-      renderStep3(); chooseMe(ME);
-    } catch (e) { toast(e.message || String(e), true); b.disabled = false; $('#tCancel').disabled = false; }
+    const me = ME, to = TO;
+    (GIVEN_LOCAL[me] = GIVEN_LOCAL[me] || []).push(to); TO = null;
+    $('#editor').innerHTML = `<div class="empty" style="padding:30px 10px">Your testimonial for ${esc(student(to).display)} is in. Pick the next batchmate.</div>`;
+    renderStep3(); chooseMe(me);
+    bg(() => run('apiAddTestimonial', to, me, text, DEVICE, navigator.userAgent, FP), () => lockMe(me),
+      () => { GIVEN_LOCAL[me] = (GIVEN_LOCAL[me] || []).filter(i => i !== to); if (ME !== me) return; TO = to; renderStep3(); renderEditor(); const t2 = $('#tText'); if (t2) { t2.value = text; t2.oninput(); } });
   };
 }
 /* a device that has written before opens as that person; if its row was removed from the Devices sheet, it is free again.
@@ -784,7 +834,7 @@ function renderTPanel() {
     <div class="card">
       <h2>Subjects taught <span class="sync" id="tsync"></span><small>${subs.length ? subs.length + ' listed · one teacher can have several, at different year levels' : 'none listed yet — add them below'}</small></h2>
       <div class="slist">${subs.map(s => `<div class="srow" data-id="${esc(s.id)}"><input value="${esc(s.subject)}" list="subjList" data-v="${esc(s.subject)}">${yrPills(s.year, 'data-y')}<div class="sbtns"><button class="btn p hidden" data-act="save">Save</button><button class="btn x" data-act="del">Remove</button></div></div>`).join('')}
-        <div class="srow add"><input id="sNew" list="subjList" placeholder="Add a subject, e.g. Chemistry">${yrPills(0, 'data-ny')}<div class="sbtns"><button class="btn p" id="sAdd">Add subject</button></div></div>
+        <div class="srow add"><input id="sNew" list="subjList" placeholder="Add a subject or field, e.g. Chemistry">${yrPills(0, 'data-ny')}<div class="sbtns"><button class="btn p" id="sAdd">Add Subject or Field</button></div></div>
       </div>
       <datalist id="subjList">${all.map(x => `<option value="${esc(x)}">`).join('')}</datalist>
     </div>
@@ -796,9 +846,9 @@ function renderTPanel() {
   on('tSave', async () => {
     const fields = {}; document.querySelectorAll('#tpanel .tn [data-k]').forEach(el => fields[el.dataset.k] = el.value.trim());
     if (!fields.first_name && !fields.last_name) return toast('Type at least a first or last name.', true);
-    $('#tSave').disabled = true;
-    try { const r = await run('apiSaveTeacher', t.code, fields); putTeacher(r); TEDIT = false; renderTeachers(); renderTPanel(); toast('Saved ' + fullName(r)); }
-    catch (e) { toast(e.message || String(e), true); $('#tSave').disabled = false; }
+    Object.assign(t, { first: fields.first_name, last: fields.last_name, nick: fields.nickname, gender: fields.gender }); rememberT();
+    TEDIT = false; renderTeachers(); settle($('#tpanel'), renderTPanel);
+    bg(() => run('apiSaveTeacher', t.code, fields), r => { TLAST[t.code] = r; }, () => { TFAIL = true; });
   });
   /* subjects change on screen at once; the sheet catches up in the background ("saving…" beside the heading) */
   $('#tpanel').querySelectorAll('.srow[data-id]').forEach(row => {
@@ -835,43 +885,6 @@ function renderTPanel() {
   on('sAdd', add); $('#sNew').onkeydown = e => { if (e.key === 'Enter') add(); };
   syncMark();
 }
-/* ---------- background saving of subjects: one change after another, in the order they were made ---------- */
-const IDMAP = {}, SRV = {};            /* temporary id → real id · the ids the sheet already has, per teacher */
-let SQ = Promise.resolve(), SPEND = 0, SLAST = null, SFAIL = false;
-const realId = id => IDMAP[id] || id;
-const sortSubs = x => x.subjects.sort((a, b) => (a.year || 9) - (b.year || 9) || a.subject.localeCompare(b.subject));
-function syncMark(state) {
-  const el = $('#tsync'); if (!el) return;
-  state = state || (SPEND ? 'on' : '');
-  el.className = 'sync ' + state;
-  el.innerHTML = state === 'on' ? '<i></i>saving…' : state === 'ok' ? '✓ saved' : state === 'bad' ? 'not saved — try again' : '';
-}
-function subjOp(code, mutate, call, tmp) {
-  const t = teacher(code); if (!t) return;
-  if (!SRV[code]) SRV[code] = new Set(t.subjects.filter(s => !/^tmp/.test(s.id)).map(s => s.id));
-  mutate(t); rememberT(); renderTeachers();
-  if (TSEL === code) settle($('#tpanel'), renderTPanel);
-  SPEND++; syncMark('on');
-  SQ = SQ.then(call).then(r => {
-    if (tmp) {                                        /* learn the real id of the row just added */
-      const nid = (r.subjects || []).map(s => s.id).find(id => !SRV[code].has(id));
-      if (nid) { IDMAP[tmp] = nid; const s = (teacher(code) || { subjects: [] }).subjects.find(s => s.id === tmp); if (s) s.id = nid;
-        const row = document.querySelector(`#tpanel .srow[data-id="${tmp}"]`); if (row) row.dataset.id = nid; }
-    }
-    SRV[code] = new Set((r.subjects || []).map(s => s.id)); SLAST = r;
-  }).catch(e => { SFAIL = true; toast('Could not save a subject: ' + (e.message || e), true); })
-    .finally(() => {
-      if (--SPEND) return;
-      const failed = SFAIL; SFAIL = false;
-      if (failed) {                                   /* bring the screen back to what the sheet really has */
-        run('apiTeachers').then(d => { if (d && d.teachers) { d.teachers.forEach(putTeacher); renderTeachers(); if (!busyT()) renderTPanel(); } }).catch(() => { });
-        syncMark('bad'); return;
-      }
-      if (SLAST && !busyT()) { putTeacher(SLAST); renderTeachers(); if (TSEL === SLAST.code) renderTPanel(); }
-      SLAST = null; syncMark('ok');
-      clearTimeout(syncMark.t); syncMark.t = setTimeout(() => { if (!SPEND) syncMark(''); }, 1800);
-    });
-}
 /* someone is typing in the panel: don't redraw it under their fingers */
 const busyT = () => { const a = document.activeElement; return !!(a && a.closest && a.closest('#tpanel') && /INPUT|TEXTAREA/.test(a.tagName) && a.value); };
 /* ---------- a batchmate's testimonial for a teacher: pick who is writing, write once; nobody sees the others' texts ---------- */
@@ -904,13 +917,11 @@ function wireTesti(t) {
     const who = WHO || TWRITER, text = ta.value.trim();
     if (!who) return toast('Pick your name first.', true);
     if (!text) return toast('Write the testimonial first.', true);
-    const b = $('#ttSend'); b.disabled = true;
-    try {
-      await run('apiAddTeacherTestimonial', t.code, who, text, DEVICE, navigator.userAgent, FP);
-      lockMe(who); WHO = who; delete TTDRAFT[t.code];
-      (t.wrote = t.wrote || []).push(who); putTeacher(t);
-      toast('Sent to ' + (nickOf(t) || fullName(t)) + '. Salamat!'); renderTPanel(); if (DATA && !ME) chooseMe(who);
-    } catch (e) { toast(e.message || String(e), true); b.disabled = false; }
+    const code = t.code;
+    delete TTDRAFT[code]; (t.wrote = t.wrote || []).push(who); putTeacher(t); settle($('#tpanel'), renderTPanel);
+    bg(() => run('apiAddTeacherTestimonial', code, who, text, DEVICE, navigator.userAgent, FP),
+      () => { lockMe(who); WHO = who; if (TSEL === code && !busyT()) renderTPanel(); if (DATA && !ME) chooseMe(who); },
+      () => { const x = teacher(code); if (x) { x.wrote = (x.wrote || []).filter(i => i !== who); putTeacher(x); } TTDRAFT[code] = text; if (TSEL === code) renderTPanel(); });
   };
 }
 
