@@ -485,11 +485,11 @@ function apiSaveSections(id, choices) {
 }
 
 /* ================================================================== TEACHERS (main view)
-   Teachers         teacher_code · first_name · last_name · nickname · display_name (a formula, never written here) · photo_file · photo_link · photo_url · drive_file_id · notes
+   Teachers         teacher_code · first_name · last_name · nickname · display_name (a formula, never written here) · photo_file · photo_link · photo_url · drive_file_id · notes · gender (F → Ma'am, M → Sir)
    Teacher Subjects teacher_code · teacher_name (a formula) · subject · year_level (1–4) · entry_id · updated_at
                     one row per subject taught: a teacher can have many rows, at different year levels */
 const T_SHEET = 'Teachers', TS_SHEET = 'Teacher Subjects', T_TTL = 120;
-const T_EDITABLE = ['first_name', 'last_name', 'nickname'];
+const T_EDITABLE = ['first_name', 'last_name', 'nickname', 'gender'];   /* gender: F → Ma'am, M → Sir */
 function bustT_() { try { CACHE().removeAll(['tboot#n']); } catch (e) { } }
 
 /** everything the Teachers view needs, in one small trip: it is the first thing the app asks for */
@@ -505,7 +505,7 @@ function buildTeachers_() {
   const g = (r, k) => t.col[k] === undefined ? '' : String(r[t.col[k]] == null ? '' : r[t.col[k]]).trim();
   const teachers = t.rows.filter(r => g(r, 'teacher_code')).map(r => {
     const code = g(r, 'teacher_code');
-    return { code, first: g(r, 'first_name'), last: g(r, 'last_name'), nick: g(r, 'nickname'), photo: g(r, 'photo_url'),
+    return { code, first: g(r, 'first_name'), last: g(r, 'last_name'), nick: g(r, 'nickname'), gender: g(r, 'gender').toUpperCase().slice(0, 1), photo: g(r, 'photo_url'),
       subjects: (subs[code] || []).sort((a, b) => (a.year || 9) - (b.year || 9) || a.subject.localeCompare(b.subject)) };
   });
   /* who has already written to which teacher (names only, never the texts): the app greys them out */
@@ -572,7 +572,8 @@ function apiSaveTeacher(code, fields) {
     const t = table_(T_SHEET);
     const i = t.rows.findIndex(r => String(r[t.col.teacher_code]) === code);
     if (i < 0) throw new Error('Unknown teacher: ' + code);
-    Object.keys(fields || {}).forEach(k => { if (T_EDITABLE.indexOf(k) >= 0) t.sh.getRange(i + 2, t.col[k] + 1).setValue(String(fields[k] || '').trim()); });
+    if (fields && fields.gender !== undefined && ['', 'F', 'M'].indexOf(String(fields.gender).toUpperCase()) < 0) throw new Error('Gender is F or M.');
+    Object.keys(fields || {}).forEach(k => { if (T_EDITABLE.indexOf(k) >= 0) t.sh.getRange(i + 2, t.col[k] + 1).setValue(k === 'gender' ? String(fields[k] || '').toUpperCase() : String(fields[k] || '').trim()); });
     SpreadsheetApp.flush(); bustT_();
     return teacherOut_(code);
   } finally { lock.releaseLock(); }

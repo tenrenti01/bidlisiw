@@ -180,6 +180,7 @@ img.wait{opacity:0}
 .face.tf b{white-space:normal;overflow:visible;line-height:1.25;min-height:2.5em;display:flex;align-items:center;justify-content:center}
 .face em.nk{display:block;font:italic 12px/1.3 Georgia,serif;color:var(--ink-soft);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .face .cnt{display:block;font:600 9.5px Arial,Helvetica,sans-serif;letter-spacing:.06em;color:var(--gilt);margin-top:3px;text-transform:uppercase}
+.facts select.gsel{width:auto;min-width:140px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font:14.5px Georgia,serif;background:var(--paper)}
 .tnick{font:italic 17px Georgia,serif;color:var(--ink-soft);margin:0 0 10px}
 .tcode{font:600 10.5px Arial,Helvetica,sans-serif;letter-spacing:.14em;color:var(--gilt);text-transform:uppercase;margin:0 0 8px}
 .srow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px 10px;align-items:center;padding:10px 0;border-top:1px solid var(--line);transition:background .3s}
@@ -665,8 +666,13 @@ const rememberT = () => { try { localStorage.setItem(TLS_KEY, JSON.stringify(TDA
 const recallT = () => { try { const x = JSON.parse(localStorage.getItem(TLS_KEY) || 'null'); return x && x.teachers ? x : null; } catch (e) { return null; } };
 const teacher = code => (TDATA && TDATA.teachers.find(t => t.code === code)) || null;
 const fullName = t => [t.first, t.last].filter(Boolean).join(' ') || t.code;
-/* the nickname shows under the name unless it is just the first name again */
-const nickOf = t => t.nick && t.nick.toLowerCase() !== (t.first || '').toLowerCase() ? t.nick : '';
+/* how the batch called them: Ma'am / Sir + nickname (or first name). Without a gender on file, the bare nickname
+   shows only when it differs from the first name. A title typed into the nickname itself is not doubled. */
+const TITLE = { F: "Ma'am", M: 'Sir' };
+const bareNick = t => String(t.nick || '').replace(/^\s*(ma'?am|mam|sir|mr\.?|ms\.?|mrs\.?)\s+/i, '').trim();
+const nickOf = t => { const n = bareNick(t), title = TITLE[t.gender];
+  if (title) return title + ' ' + (n || String(t.first || '').split(' ')[0]);
+  return n && n.toLowerCase() !== (t.first || '').toLowerCase() ? n : ''; };
 const tAv = t => ({ id: 't:' + t.code, photo: t.photo, display: fullName(t) });
 function putTeacher(t) { if (!t || !TDATA) return; const i = TDATA.teachers.findIndex(x => x.code === t.code); if (i >= 0) TDATA.teachers[i] = t; else TDATA.teachers.push(t); rememberT(); }
 function renderTeachers() {
@@ -692,9 +698,9 @@ function renderTPanel() {
   const nick = nickOf(t), subs = t.subjects;
   const all = [...new Set(TDATA.teachers.flatMap(x => x.subjects.map(s => s.subject)))].sort();
   const names = TEDIT
-    ? `<div class="facts tn"><b>First name</b><input data-k="first_name" value="${esc(t.first)}"><b>Last name</b><input data-k="last_name" value="${esc(t.last)}"><b>Nickname</b><input data-k="nickname" value="${esc(t.nick)}" placeholder="what the batch called this teacher"></div>
+    ? `<div class="facts tn"><b>First name</b><input data-k="first_name" value="${esc(t.first)}"><b>Last name</b><input data-k="last_name" value="${esc(t.last)}"><b>Nickname</b><input data-k="nickname" value="${esc(bareNick(t))}" placeholder="what the batch called this teacher"><b>Called</b><select data-k="gender" class="gsel"><option value=""${t.gender ? '' : ' selected'}>—</option><option value="F"${t.gender === 'F' ? ' selected' : ''}>Ma'am</option><option value="M"${t.gender === 'M' ? ' selected' : ''}>Sir</option></select></div>
        <div class="row"><button class="btn p" id="tSave">Save names</button><button class="btn g" id="tCancel">Cancel</button></div>`
-    : `<div class="facts"><b>First name</b><span>${t.first ? esc(t.first) : '<span class="blank">—</span>'}</span><b>Last name</b><span>${t.last ? esc(t.last) : '<span class="blank">—</span>'}</span><b>Nickname</b><span>${t.nick ? esc(t.nick) : '<span class="blank">—</span>'}</span></div>
+    : `<div class="facts"><b>First name</b><span>${t.first ? esc(t.first) : '<span class="blank">—</span>'}</span><b>Last name</b><span>${t.last ? esc(t.last) : '<span class="blank">—</span>'}</span><b>Nickname</b><span>${bareNick(t) ? esc(bareNick(t)) : '<span class="blank">—</span>'}</span><b>Called</b><span>${TITLE[t.gender] ? esc(TITLE[t.gender]) : '<span class="blank">—</span>'}</span></div>
        <div class="row"><button class="btn g" id="tEdit">Edit names</button></div>`;
   $('#tpanel').innerHTML = `
     <div class="card">
