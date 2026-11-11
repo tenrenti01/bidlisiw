@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bidlisiw · Batch 2007</title>
+<script src="config.js"></script>
+<style>
+:root{--crimson:#5e0f1b;--crimson-2:#8c1c2c;--gilt:#c99a3e;--gilt-l:#e3be65;--paper:#fbf6ea;--ink:#2b1d14;--ink-soft:#6e5a46;--line:#e6d9bd;--ok:#1e7b34;--bad:#c0392b;--sh:0 6px 18px rgba(60,30,10,.10),0 1px 3px rgba(60,30,10,.08)}
+*{box-sizing:border-box}
+html,body{margin:0;background:#f4efe3;color:var(--ink);font:15px/1.45 Georgia,'Times New Roman',serif;-webkit-text-size-adjust:100%}
+header{position:sticky;top:0;z-index:5;background:var(--crimson);color:#f6dfa0;padding:12px 20px;box-shadow:0 2px 10px rgba(0,0,0,.25);display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+header h1{margin:0;font:700 17px/1.2 Arial,Helvetica,sans-serif;letter-spacing:.06em}
+header small{font:11px Arial,Helvetica,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.75}
+header .stats{margin-left:auto;font:600 12px Arial,Helvetica,sans-serif;letter-spacing:.04em;opacity:.9}
+/* full width on desktop: faces on the left, the chosen batchmate on the right */
+main{padding:18px 20px}
+@media(max-width:959px){main{padding:14px}header{position:static}}   /* phones and tablets: the header scrolls away with the page */
+.split{display:grid;grid-template-columns:minmax(360px,5fr) minmax(420px,7fr);gap:18px;align-items:start}
+@media(max-width:959px){.split{grid-template-columns:1fr}}
+/* the two views */
+.tabs{display:flex;gap:6px;margin-left:auto}
+.tab{border:1px solid rgba(246,223,160,.35);background:none;color:#f6dfa0;border-radius:999px;padding:7px 14px;font:600 11.5px Arial,Helvetica,sans-serif;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;opacity:.75;transition:all .2s}
+.tab:hover{opacity:1}.tab.on{background:#f6dfa0;color:var(--crimson);opacity:1}
+header .stats{margin-left:0;flex-basis:100%;font-size:11px}
+@media(min-width:960px){header .stats{flex-basis:auto;margin-left:8px}}
+.view{animation:fadein .3s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+/* nothing appears or changes in a snap: cards, the identity strip and the writing box ease in */
+.me,#s3,.editor>*,#old2007,#s1pick{animation:fadein .45s cubic-bezier(.2,.7,.2,1) both}
+.editor>*:nth-child(2){animation-delay:.05s}.editor>*:nth-child(3){animation-delay:.1s}
+.step{transition:padding .4s ease}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* testimonial flow */
+.flow{max-width:1120px;margin:0 auto}
+.step{position:relative}
+.step h2 .n{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--crimson);color:#f6dfa0;font:700 11px Arial,Helvetica,sans-serif;margin-right:8px;vertical-align:-5px}
+.step.done h2 .n{background:var(--ok)}
+.me{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:18px}
+@media(max-width:700px){.me{grid-template-columns:auto 1fr}.me .msg{grid-column:1/-1}}
+.me .id{display:flex;align-items:center;gap:12px}
+.me .msg h4{margin:0 0 4px;font:600 10.5px Arial,Helvetica,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gilt)}
+.me .msg .txt{font-style:italic;color:var(--ink);line-height:1.5;margin:0}
+.me .msg .para{min-height:62px;font-size:14px;line-height:1.5;padding:9px 12px}
+.me .msg .row{margin-top:6px;justify-content:flex-end}
+.me img,.me .av{width:56px;height:70px;object-fit:cover;object-position:top;border-radius:8px;box-shadow:0 0 0 1.5px var(--gilt);background:var(--paper);display:grid;place-items:center;font:700 18px Arial,Helvetica,sans-serif;color:var(--crimson)}
+.me .who{font:700 19px Georgia,serif;color:var(--crimson)}
+.me .sub{margin:2px 0 0}
+.me .chg{margin-left:auto}
+.lockd{font:600 11px Arial,Helvetica,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:4px 8px;margin-left:auto}
+.grid.pick .face.done{opacity:.38;filter:grayscale(1);cursor:default;pointer-events:none;transition-duration:.7s}
+.grid.pick .face.me{display:none}
+.sub3{margin:14px 0 6px;font:700 11.5px Arial,Helvetica,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+.grid.pick.was{margin-top:0;margin-bottom:6px}
+.grid.pick.was .face{opacity:.55;filter:grayscale(.6);cursor:default;pointer-events:none}
+.write{display:grid;grid-template-columns:minmax(300px,5fr) minmax(320px,6fr);gap:18px;align-items:start}
+.write .colA{grid-column:1/-1}
+@media(max-width:860px){.write{grid-template-columns:1fr}}
+.sub3:first-child{margin-top:0}
+/* the two headings share one row, so both grids start on the same line */
+.hdr{display:flex;align-items:flex-end;gap:14px;min-height:46px;margin-bottom:10px}
+.hdr .sub3{margin:0 0 4px;flex:1}
+.hdr .search{flex:0 1 320px;padding:10px 14px}
+.hdr+.grid{margin-top:0}
+@media(max-width:600px){.hdr{flex-wrap:wrap}.hdr .search{flex-basis:100%}}
+/* thin, light dividers between the three parts */
+.write>*+*{border-top:1px solid var(--line);padding-top:14px}
+@media(min-width:1100px){.write>*+*{border-top:0;padding-top:0;border-left:1px solid var(--line);padding-left:18px}.write{gap:0 0}.write>*{padding-right:18px}.write>*:last-child{padding-right:0}}
+/* widescreen: everything fits the window, each column scrolls on its own */
+@media(min-width:1100px){
+  main.fit{height:calc(100vh - 54px);overflow:hidden;display:flex;flex-direction:column;padding-bottom:14px}
+  main.fit .view{flex:1;min-height:0}
+  .flow{max-width:none;width:100%;margin:0;display:flex;flex-direction:column;gap:0}
+  .flow .step{display:flex;flex-direction:column;min-height:0}
+  #s1:not(.done),#s3{flex:1}
+  #s1.done{flex:none}
+  #s1pick{display:flex;flex-direction:column;min-height:0}#s1pick .grid{overflow:auto;min-height:0;padding-right:4px;scrollbar-width:thin}
+  .write{flex:1;min-height:0;grid-template-columns:minmax(300px,2fr) minmax(0,5fr) minmax(380px,4fr);align-items:stretch}
+  .write.no2007{grid-template-columns:minmax(0,7fr) minmax(380px,4fr)}
+  .write .colA{grid-column:auto;min-height:0;overflow:auto;padding-right:4px;scrollbar-width:thin}
+  .write .colB{min-height:0;display:flex;flex-direction:column}
+  .write .colB .grid{overflow:auto;min-height:0;padding-right:4px;scrollbar-width:thin}
+  #s1.done{padding:10px 16px}#s1.done h2{margin-bottom:6px}.me img,.me .av{width:52px;height:65px}
+  .editor{position:static;min-height:0;overflow:auto}
+  .editor .para{min-height:220px}
+  .write .colA .grid,.write .colB .grid{grid-template-columns:repeat(auto-fill,92px);gap:10px;justify-content:start}
+  .split{height:100%}
+}
+.editor{position:sticky;top:76px}
+@media(max-width:860px){.editor{position:static}}
+.editor .to{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.editor .to img,.editor .to .av{width:48px;height:60px;object-fit:cover;object-position:top;border-radius:6px;box-shadow:0 0 0 1.5px var(--gilt);background:var(--paper);display:grid;place-items:center;font:700 16px Arial,Helvetica,sans-serif;color:var(--crimson)}
+.editor .to b{font:700 17px Georgia,serif;color:var(--crimson)}
+.editor .to small{display:block;color:var(--ink-soft);font-style:italic}
+textarea.para{width:100%;min-height:200px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;font:15px/1.6 Georgia,serif;background:var(--paper);resize:vertical;outline:none;transition:border-color .2s,box-shadow .2s}
+textarea.para:focus{border-color:var(--gilt);box-shadow:0 0 0 3px rgba(201,154,62,.18);background:#fff}
+.count{font:600 11px Arial,Helvetica,sans-serif;color:var(--ink-soft);margin-left:auto}
+.progress{font:600 11.5px Arial,Helvetica,sans-serif;letter-spacing:.06em;color:var(--ink-soft);margin-left:8px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--sh);padding:16px;margin-bottom:14px}
+h2{margin:0 0 10px;font:700 13px Arial,Helvetica,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--crimson)}
+h2 small{font-weight:400;letter-spacing:0;text-transform:none;color:var(--ink-soft);margin-left:8px}
+.search{width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:10px;font:15px Georgia,serif;background:var(--paper);outline:none;transition:border-color .2s,box-shadow .2s}
+.search:focus{border-color:var(--gilt);box-shadow:0 0 0 3px rgba(201,154,62,.18)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:10px;margin-top:12px}
+.face{border:1px solid var(--line);border-radius:10px;background:#fff;padding:8px 6px;text-align:center;cursor:pointer;transition:transform .4s cubic-bezier(.2,.7,.2,1),opacity .4s ease,filter .4s ease,box-shadow .3s ease,border-color .3s ease,background .3s ease;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.face:hover{transform:translateY(-2px);box-shadow:var(--sh);border-color:var(--gilt)}
+.face.sel{border-color:var(--crimson);box-shadow:0 0 0 2px var(--crimson) inset,var(--sh)}
+.face img,.face .av{width:58px;height:72px;object-fit:cover;object-position:top;border-radius:6px;display:block;margin:0 auto 6px;box-shadow:0 0 0 1.5px var(--gilt);background:var(--paper)}
+.face .av{display:grid;place-items:center;font:700 16px Arial,Helvetica,sans-serif;color:var(--crimson)}
+.face b{display:block;font:600 10.5px Arial,Helvetica,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.face i{display:block;font:600 10px/1.35 Arial,Helvetica,sans-serif;font-style:normal;margin-top:3px;min-height:26px;color:var(--ink-soft)}
+.face i .ln{display:flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;box-shadow:0 0 0 1.5px rgba(255,255,255,.9),0 1px 2px rgba(0,0,0,.25)}
+.dot.g{background:#2e9b4f}.dot.o{background:#f0912a}.dot.r{background:#d63a2f}
+.hidden{display:none!important}
+img.wait{opacity:0}
+.face img,.photo img{transition:opacity .35s}
+/* desktop: each column scrolls on its own, so the chosen batchmate always stays in view */
+@media(min-width:960px){#left,#detail,#tleft,#tdetail{max-height:calc(100vh - 110px);overflow:auto;padding-right:4px;scrollbar-width:thin}#detail,#tdetail{position:sticky;top:92px}}
+.pf{display:grid;grid-template-columns:150px 1fr;gap:18px}
+@media(max-width:620px){.pf{grid-template-columns:1fr}.pf .photo{max-width:200px;margin:0 auto}}
+.photo img,.photo .av{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:top;border-radius:10px;box-shadow:0 0 0 2px var(--gilt),var(--sh);background:var(--paper);display:block}
+.photo .av{display:grid;place-items:center;font:700 44px Arial,Helvetica,sans-serif;color:var(--crimson)}
+.photo .upl{display:block;text-align:center;margin-top:10px}.photo .upln{font-size:11px;margin-top:6px;text-align:center;line-height:1.3}
+.name{font:700 22px/1.15 Georgia,serif;color:var(--crimson);margin:0 0 2px}
+.sub{color:var(--ink-soft);font-style:italic;margin:0 0 10px}
+.note{margin:0 0 12px;font:600 12.5px Arial,Helvetica,sans-serif;padding:8px 12px;border-radius:8px;background:var(--paper);border:1px solid var(--line)}
+.note.bad{background:#fdf0ee;border-color:#f0c9c3;color:var(--bad)}.note.ok{background:#eef7ef;border-color:#c8e3cc;color:var(--ok)}
+.facts{display:grid;grid-template-columns:140px 1fr;gap:6px 12px;font-size:14.5px}
+.facts b{font:600 11px Arial,Helvetica,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--gilt);padding-top:3px}
+.facts span.blank{color:#b9a98a;font-style:italic}
+.facts input,.facts textarea{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font:14.5px Georgia,serif;background:var(--paper)}
+.facts .inline{background:#fff;border-style:dashed;padding:6px 10px;font-style:italic;color:var(--ink)}.facts .inline:focus{border-style:solid;border-color:var(--gilt);outline:none;font-style:normal}
+.facts textarea.inline{min-height:40px}
+.facts textarea{min-height:64px;resize:vertical}
+.list{margin:0;padding-left:18px}.list li{margin:3px 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:620px){.two{grid-template-columns:1fr}}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.btn{border:0;border-radius:10px;padding:11px 18px;font:600 12.5px Arial,Helvetica,sans-serif;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:transform .15s,box-shadow .2s,background .2s;box-shadow:0 2px 6px rgba(0,0,0,.12)}
+.btn:active{transform:translateY(1px)}
+.btn.p{background:var(--crimson);color:#f6dfa0}.btn.p:hover{background:var(--crimson-2)}
+.btn.g{background:#fff;color:var(--crimson);border:1px solid var(--line)}
+.btn[disabled]{opacity:.5;cursor:default}
+.yr{margin:10px 0 4px}
+.yr h3{margin:0 0 7px;font:700 11.5px Arial,Helvetica,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+.yr h3 em{font-style:normal;color:var(--ok);margin-left:6px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:8px 15px;font:600 12.5px Arial,Helvetica,sans-serif;color:var(--ink);cursor:pointer;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.opt:hover{border-color:var(--gilt)}
+.opt.on{background:var(--crimson);border-color:var(--crimson);color:#f6dfa0;box-shadow:0 3px 8px rgba(94,15,27,.3)}
+.opt.saved:not(.on){border-color:var(--ok);color:var(--ok)}
+.ok{color:var(--ok);font-weight:700}.bad{color:var(--bad);font-weight:700}
+.lock{display:inline-block;font:600 10px Arial,Helvetica,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:2px 7px;margin-left:6px;vertical-align:middle}
+.addbox{display:flex;flex-direction:column;gap:8px;margin-top:6px}.addbox .search{resize:vertical;font-size:14px;line-height:1.5}.addbox .btn{align-self:flex-end;padding:9px 16px}
+.muted{color:var(--ink-soft);font-size:13px}
+.empty{color:var(--ink-soft);font-style:italic;text-align:center;padding:50px 20px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);background:#2b1d14;color:#f6dfa0;padding:12px 18px;border-radius:10px;font:600 13px Arial,Helvetica,sans-serif;opacity:0;transition:all .35s;box-shadow:0 8px 24px rgba(0,0,0,.35);max-width:92vw;z-index:9}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast.bad{background:var(--bad);color:#fff}
+.loading{text-align:center;color:var(--ink-soft);padding:30px;font-style:italic;grid-column:1/-1}
+/* birthday picker: year · month · day, then OK */
+.facts input.bday{cursor:pointer;background:#fff8e6}
+.modal{position:fixed;inset:0;background:rgba(43,29,20,.55);display:flex;align-items:center;justify-content:center;z-index:20;opacity:0;pointer-events:none;transition:opacity .25s}
+.modal.show{opacity:1;pointer-events:auto}
+.dlg{background:#fff;border-radius:14px;box-shadow:0 20px 50px rgba(0,0,0,.35);width:min(560px,94vw);padding:18px 18px 16px;transform:translateY(12px);transition:transform .25s}
+.modal.show .dlg{transform:none}
+.dlg h2{margin-bottom:12px}
+.cols{display:grid;grid-template-columns:1fr 1.4fr 2fr;gap:12px}
+.col h4{margin:0 0 6px;font:600 10.5px Arial,Helvetica,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gilt)}
+.col .opts{gap:6px}
+.col .opt{padding:8px 0;min-width:0;flex:1 0 auto;text-align:center;border-radius:8px}
+.col.years .opt{width:100%}
+.col.months .opts{display:grid;grid-template-columns:repeat(3,1fr)}
+.col.days .opts{display:grid;grid-template-columns:repeat(7,1fr)}
+.col .opt.off{opacity:.3;pointer-events:none}
+.preview{margin:14px 0 0;font:700 15px Georgia,serif;color:var(--crimson);text-align:center}
+.dlg .row{justify-content:flex-end}
+/* teachers (main view) */
+.face.tf b{white-space:normal;overflow:visible;line-height:1.25;min-height:2.5em;display:flex;align-items:center;justify-content:center}
+.face em.nk{display:block;font:italic 12px/1.3 Georgia,serif;color:var(--ink-soft);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.face .cnt{display:block;font:600 9.5px Arial,Helvetica,sans-serif;letter-spacing:.06em;color:var(--gilt);margin-top:3px;text-transform:uppercase}
+.tnick{font:italic 17px Georgia,serif;color:var(--ink-soft);margin:0 0 10px}
+.tcode{font:600 10.5px Arial,Helvetica,sans-serif;letter-spacing:.14em;color:var(--gilt);text-transform:uppercase;margin:0 0 8px}
+.srow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px 10px;align-items:center;padding:10px 0;border-top:1px solid var(--line);transition:background .3s}
+.srow:first-child{border-top:0}
+.srow input{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font:14.5px Georgia,serif;background:var(--paper);outline:none;transition:border-color .2s,box-shadow .2s}
+.srow input:focus{border-color:var(--gilt);box-shadow:0 0 0 3px rgba(201,154,62,.18);background:#fff}
+.yrs{display:flex;gap:4px}
+.yrs .opt{padding:6px 0;width:38px;text-align:center;border-radius:8px;font-size:12px}
+.sbtns{display:flex;gap:6px;justify-content:flex-end}
+.sbtns .btn{padding:8px 12px;font-size:11px}
+.btn.x{background:#fff;color:var(--bad);border:1px solid #f0c9c3}.btn.x.sure{background:var(--bad);color:#fff}
+.srow.add{border-top:1px dashed var(--gilt);margin-top:6px;padding-top:14px}
+@media(max-width:620px){.srow{grid-template-columns:1fr auto}.srow .sbtns{grid-column:1/-1}}
+.slist .empty{padding:14px 0;text-align:left}
+/* a batchmate's testimonial for a teacher */
+.twho{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.twho label{font:600 10.5px Arial,Helvetica,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gilt)}
+.twho select{flex:1 1 260px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:15px Georgia,serif;background:var(--paper);color:var(--ink);outline:none}
+.twho select:focus{border-color:var(--gilt);box-shadow:0 0 0 3px rgba(201,154,62,.18)}
+.tbox{position:relative}
+.tbox .tav{position:absolute;top:12px;left:12px;width:52px;height:65px;opacity:0;transform:scale(.8);transition:opacity .4s ease,transform .4s cubic-bezier(.2,.7,.2,1);pointer-events:none;z-index:1}
+.tbox .tav img,.tbox .tav .av{width:52px;height:65px;object-fit:cover;object-position:top;border-radius:7px;box-shadow:0 0 0 1.5px var(--gilt),0 2px 6px rgba(0,0,0,.15);background:var(--paper);display:grid;place-items:center;font:700 16px Arial,Helvetica,sans-serif;color:var(--crimson)}
+.tbox textarea.para{transition:padding .4s cubic-bezier(.2,.7,.2,1),border-color .2s,box-shadow .2s;min-height:150px}
+.tbox.on .tav{opacity:1;transform:none}
+.tbox.on textarea.para{padding-left:78px}
+.tbox textarea[disabled]{opacity:.6;cursor:not-allowed}
+.tdone{padding:14px 16px;border-radius:10px;background:#eef7ef;border:1px solid #c8e3cc;color:var(--ok);font:600 13px Arial,Helvetica,sans-serif}
+</style>
+</head>
+<body>
+<header>
+  <h1>BIDLISIW · PSHS-CVC BATCH 2007</h1><small>batch database</small>
+  <nav class="tabs" id="tabs"><button class="tab on" data-view="teachers">Teachers</button><button class="tab" data-view="testi">Testimonials</button><button class="tab" data-view="profiles">Profiles &amp; sections</button></nav>
+  <span class="stats" id="stats"></span>
+</header>
+<main>
+  <div id="loading" class="loading hidden">Downloading the batch…</div>
+
+  <!-- main view: teachers -->
+  <div id="view-teachers" class="view split">
+    <section id="tleft">
+      <div class="card">
+        <h2>Our teachers <small>tap a picture</small></h2>
+        <input class="search" id="tq" placeholder="Search a teacher or nickname…" autocomplete="off">
+        <div class="grid" id="tfaces"><div class="loading">Loading the teachers…</div></div>
+      </div>
+    </section>
+    <section id="tdetail">
+      <div class="card empty" id="tplaceholder">Pick a teacher on the left to see the name and the subjects taught.</div>
+      <div id="tpanel"></div>
+    </section>
+  </div>
+
+  <!-- main view: testimonials -->
+  <div id="view-testi" class="view flow hidden">
+    <!-- 1 · who are you -->
+    <section class="card step" id="s1">
+      <h2><span class="n">1</span>Who are you? <small>tap your picture</small></h2>
+      <div id="s1pick">
+        <input class="search" id="q1" placeholder="Search your name or nickname…" autocomplete="off">
+        <div class="grid" id="faces1"></div>
+      </div>
+      <div id="s1me" class="me hidden"></div>
+    </section>
+    <!-- 3 · write to a batchmate -->
+    <section class="card step hidden" id="s3">
+      <h2><span class="n">2</span>Write a testimonial <small>pick a batchmate</small><span class="progress" id="progress"></span></h2>
+      <div class="write" id="write">
+        <div class="colA hidden" id="old2007">
+          <div class="hdr"><h3 class="sub3">Batchmates you already gave a comment to</h3></div>
+          <div class="grid pick was" id="faces2007"></div>
+        </div>
+        <div class="colB">
+          <div class="hdr"><h3 class="sub3" id="remainH">The rest of the batch</h3><input class="search" id="q3" placeholder="Search a batchmate…" autocomplete="off"></div>
+          <div class="grid pick" id="faces3"></div>
+        </div>
+        <div class="editor" id="editor"><div class="empty" style="padding:30px 10px">Pick a batchmate, then write.</div></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- second view: profiles and sections -->
+  <div id="view-profiles" class="view split hidden">
+    <section id="left">
+      <div class="card">
+        <h2>Batchmates <small>tap a picture</small></h2>
+        <input class="search" id="q" placeholder="Search a name or nickname…" autocomplete="off">
+        <div class="grid" id="faces"></div>
+      </div>
+    </section>
+    <section id="detail">
+      <div class="card empty" id="placeholder">Pick a batchmate on the left to see the profile and set the sections.</div>
+      <div id="panel"></div>
+    </section>
+  </div>
+</main>
+<div class="toast" id="toast"></div>
+
+<!-- birthday picker -->
+<div class="modal" id="bdModal">
+  <div class="dlg">
+    <h2>Birthday</h2>
+    <div class="cols">
+      <div class="col years"><h4>Year</h4><div class="opts" id="bdYears"></div></div>
+      <div class="col months"><h4>Month</h4><div class="opts" id="bdMonths"></div></div>
+      <div class="col days"><h4>Day</h4><div class="opts" id="bdDays"></div></div>
+    </div>
+    <p class="preview" id="bdPreview">—</p>
+    <div class="row"><button class="btn g" id="bdClear">Clear</button><button class="btn g" id="bdCancel">Cancel</button><button class="btn p" id="bdOk">OK</button></div>
+  </div>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let DATA = null, SEL = null, PROFILE = null, EDIT = false, CHOICES = {};
+/* every call goes to the Apps Script API (its /exec URL is in config.js). text/plain keeps the browser from a CORS pre-check */
+const API_URL = String(window.BIDLISIW_API || '').trim();
+const API_OK = /^https:\/\/script\.google\.com\/macros\/s\/.+\/exec/.test(API_URL);
+const run = (fn, ...args) => {
+  if (!API_OK) return Promise.reject(new Error('The site is not connected yet: put the Apps Script /exec URL into config.js.'));
+  return fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ fn, args }) })
+    .then(r => { if (!r.ok) throw new Error('The server answered ' + r.status + '. Try again in a moment.'); return r.json(); })
+    .then(r => { if (!r.ok) throw new Error(r.e || 'Something went wrong.'); return r.v; });
+};
+function toast(msg, bad) { const t = $('#toast'); t.textContent = msg; t.className = 'toast show' + (bad ? ' bad' : ''); clearTimeout(t._h); t._h = setTimeout(() => t.className = 'toast', 3200); }
+const initials = s => (s || '?').split(/\s+/).slice(0, 2).map(x => x[0]).join('').toUpperCase();
+/* photos: try the Drive link; if Drive refuses (visitor not signed in to Google, e.g. incognito), try Google's image
+   server, and if that fails too, ask the script for the photo itself (it runs as the owner, so it can always read it) */
+const PHOTO = {}, NOPHOTO = new Set(), ASKED = new Set(), WANT = new Set();
+const fidOf = u => ((String(u || '').match(/[?&]id=([\w-]+)/) || String(u || '').match(/\/d\/([\w-]+)/) || [])[1]) || '';
+const avHTML = d => `<div class="av">${esc(initials(d))}</div>`;
+const avatar = p => {
+  const sid = p.id || '';
+  if (!p.photo || NOPHOTO.has(sid)) return avHTML(p.display);
+  const src = PHOTO[sid] || p.photo;
+  return `<img src="${esc(src)}" alt="" data-sid="${esc(sid)}" data-fid="${esc(fidOf(p.photo))}" data-ini="${esc(p.display)}" data-st="${PHOTO[sid] ? 3 : 0}" onerror="imgFail(this)">`;
+};
+function imgFail(el) {
+  const sid = el.dataset.sid, fid = el.dataset.fid, st = +(el.dataset.st || 0);
+  if (st === 0 && fid) { el.dataset.st = 1; el.src = 'https://lh3.googleusercontent.com/d/' + fid + '=w600'; return; }
+  if (st <= 1 && sid) { el.dataset.st = 2; el.classList.add('wait'); if (!ASKED.has(sid)) { WANT.add(sid); clearTimeout(imgFail.t); imgFail.t = setTimeout(fetchPhotos, 150); } return; }
+  el.outerHTML = avHTML(el.dataset.ini);
+}
+function swapPhoto(sid) {
+  document.querySelectorAll('img[data-sid="' + sid + '"]').forEach(el => {
+    if (PHOTO[sid]) { el.dataset.st = 3; el.src = PHOTO[sid]; el.classList.remove('wait'); }
+    else el.outerHTML = avHTML(el.dataset.ini);
+  });
+}
+function fetchPhotos() {
+  const ids = [...WANT].filter(i => !ASKED.has(i)); WANT.clear(); ids.forEach(i => ASKED.add(i));
+  /* teachers' tiles carry ids like "t:T001"; batchmates' are their student ids */
+  const ask = (list, fn, key) => { for (let k = 0; k < list.length; k += 12) {   /* a few small requests side by side: the first faces fill in quickly */
+    const part = list.slice(k, k + 12);
+    run(fn, part.map(key)).then(got => part.forEach(sid => { const v = got[key(sid)]; if (v) PHOTO[sid] = v; else NOPHOTO.add(sid); swapPhoto(sid); }))
+      .catch(() => part.forEach(sid => { NOPHOTO.add(sid); swapPhoto(sid); }));
+  } };
+  ask(ids.filter(i => !i.startsWith('t:')), 'apiPhotos', x => x);
+  ask(ids.filter(i => i.startsWith('t:')), 'apiTeacherPhotos', x => x.slice(2));
+}
+const ROMAN = { 1: 'I', 2: 'II', 3: 'III', 4: 'IV' };
+const LABELS = { first_name: 'First name', middle_name: 'Middle name', last_name: 'Last name', nicknames: 'Nickname(s)', birthday: 'Birthday', hometown: 'Hometown', home_province: 'Home province', current_location: 'Current location', self_quote: 'Self-quote', message_to_batch: 'Message to the batch', email_current: 'E-mail (current)' };
+
+/* ---------- the batch (left) ---------- */
+const student = id => DATA.students.find(p => p.id === id) || {};
+const secDone = id => [1, 2, 3, 4].filter(y => (DATA.yearSections[id] || {})[y]).length;
+function badge(p) {
+  const m = (p.missing || []).length, s = secDone(p.id);
+  const dot = (c, tip) => `<span class="dot ${c}" title="${tip}"></span>`;
+  const pc = m === 0 ? 'g' : m <= 3 ? 'o' : 'r';            /* profile: none missing · 1–3 missing · 4+ missing */
+  const sc = s === 4 ? 'g' : s >= 1 ? 'o' : 'r';            /* sections: all 4 · some · none */
+  return `<span class="ln">Profile ${dot(pc, m ? m + ' missing' : 'complete')}</span><span class="ln">Sections ${dot(sc, s + '/4')}</span>`;
+}
+function renderFaces() {
+  const q = $('#q').value.toLowerCase();
+  const list = DATA.students.filter(p => !q || p.display.toLowerCase().includes(q) || p.name.toLowerCase().includes(q) || p.id.includes(q));
+  morph($('#faces'), list.map(p => `<div class="face${p.id === SEL ? ' sel' : ''}" data-id="${esc(p.id)}">${avatar(p)}<b title="${esc(p.name)}">${esc(p.display)}</b><i>${badge(p)}</i></div>`).join('') || '<div class="muted">No one by that name.</div>');
+  $('#faces').querySelectorAll('.face').forEach(el => el.onclick = () => openStudent(el.dataset.id));
+  setStats();
+}
+function setStats() {
+  if (VIEW === 'teachers') {
+    if (!TDATA) return;
+    const T = TDATA.teachers, withS = T.filter(t => t.subjects.length).length, n = T.reduce((a, t) => a + t.subjects.length, 0);
+    $('#stats').textContent = `${T.length} teachers · ${withS} with subjects · ${n} subject${n === 1 ? '' : 's'} listed`;
+    return;
+  }
+  if (!DATA) { $('#stats').textContent = ''; return; }
+  const total = DATA.students.reduce((a, p) => a + (p.missing || []).length, 0), done = DATA.students.filter(p => !(p.missing || []).length).length, secs = DATA.students.filter(p => secDone(p.id) === 4).length;
+  $('#stats').textContent = `${DATA.students.length} batchmates · ${done} complete · ${total} facts missing · sections complete for ${secs}`;
+}
+$('#q').oninput = renderFaces;
+
+/* ---------- the chosen batchmate (right) ---------- */
+async function openStudent(id) {
+  SEL = id; EDIT = false; renderFaces();
+  $('#placeholder').classList.add('hidden');
+  if (window.innerWidth < 960) $('#detail').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const have = DATA.yearSections[id] || {}; CHOICES = {}; [1, 2, 3, 4].forEach(y => { if (have[y]) CHOICES[y] = have[y]; });
+  const have2 = DATA.profiles && DATA.profiles[id];
+  if (have2) { PROFILE = have2; renderPanel(); return; }          /* everyone is already downloaded: instant */
+  $('#panel').innerHTML = '<div class="card loading">Opening…</div>';
+  try { PROFILE = await run('apiGetProfile', id); keep(PROFILE); renderPanel(); } catch (e) { toast(e.message || String(e), true); }
+}
+function renderPanel() {
+  const p = PROFILE, s = student(p.id), v = k => p[k] ? esc(p[k]) : '<span class="blank">—</span>';
+  const m = s.missing || [];
+  const ADD_ONLY = ['self_quote', 'message_to_batch'];   /* written in 2007: can be filled in when blank, never changed once on file */
+  const facts = Object.keys(LABELS).map(k => `<b>${LABELS[k]}</b>${EDIT
+    ? (ADD_ONLY.includes(k) ? (p[k] ? `<span>${esc(p[k])} <span class="lock">on file since 2007 — can't be changed</span></span>` : `<textarea data-k="${k}" placeholder="none on file — add it"></textarea>`)
+      : k === 'birthday' ? `<input class="bday" data-k="birthday" value="${esc(p[k])}" placeholder="tap to pick" readonly>` : `<input data-k="${k}" value="${esc(p[k])}">`)
+    : p[k] ? `<span>${esc(p[k])}${k === 'birthday' && p.zodiac ? ' <span class="muted">· ' + esc(p.zodiac) + '</span>' : ''}</span>`
+      : (k === 'birthday' ? `<input class="bday inline" data-q="birthday" placeholder="tap to pick…" readonly>`
+        : (k === 'message_to_batch' || k === 'self_quote') ? `<textarea class="inline" data-q="${k}" placeholder="none on file — type to add"></textarea>`
+        : `<input class="inline" data-q="${k}" placeholder="none on file — type to add">`)}`).join('');
+  const addBox = (kind, ph) => `<div class="addbox"><textarea class="search" id="${kind}New" placeholder="${ph}" rows="4"></textarea><button class="btn g" id="${kind}Add">Add</button></div>`;
+  const have = DATA.yearSections[p.id] || {};
+  const years = [1, 2, 3, 4].map(y => `<div class="yr"><h3>Year ${ROMAN[y]}${have[y] ? '<em>on file: ' + esc(have[y]) + '</em>' : ''}</h3><div class="opts">${(DATA.sections[y] || []).map(x => `<button class="opt${CHOICES[y] === x ? ' on' : ''}${have[y] === x ? ' saved' : ''}" data-y="${y}" data-s="${esc(x)}">${esc(x)}</button>`).join('')}</div></div>`).join('');
+  $('#panel').innerHTML = `
+    <div class="card">
+      <div class="pf">
+        <div class="photo">${avatar({ id: p.id, photo: p.photo_url, display: p.display_name })}${p.photo_url ? '' : `<label class="btn g upl" for="photoFile">Add photo</label><input type="file" id="photoFile" accept="image/*" class="hidden"><div class="muted upln">JPG or PNG · portrait, like the 2007 ones · only while none is on file</div>`}</div>
+        <div>
+          <p class="name">${esc(p.full_name || p.display_name)}</p>
+          <p class="sub">${p.section ? 'IV-' + esc(p.section) : 'section IV not on file'}${p.nicknames ? ' · “' + esc(p.nicknames) + '”' : ''}</p>
+          ${m.length ? `<p class="note bad">${m.length} fact${m.length === 1 ? '' : 's'} missing: ${m.map(esc).join(', ')}</p>` : '<p class="note ok">Profile complete — nothing missing.</p>'}
+          <div class="facts">${facts}</div>
+          <div class="row">${EDIT ? `<button class="btn p" id="save">Save changes</button><button class="btn g" id="cancel">Cancel</button>` : `<button class="btn p hidden" id="quick">Save new entries</button><button class="btn g" id="edit">Edit profile <span class="muted">· to change what's there</span></button>`}</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Sections <small>${secDone(p.id) === 4 ? '<span class="ok">Complete</span>' : 'tap one per year · partial is fine'}</small></h2>
+      ${years}
+      <div class="row"><button class="btn p" id="sSubmit">Submit sections</button><button class="btn g" id="sClear">Clear choices</button><span class="muted">Only the years you tap are saved.</span></div>
+    </div>
+    <div class="two">
+      <div class="card"><h2>Dreams in 2007 <small>${p.dreams.length ? 'as written in 2007' : 'none on file — add them, one per line'}</small></h2>${p.dreams.length ? '<ul class="list">' + p.dreams.map(d => '<li>' + esc(d) + '</li>').join('') + '</ul>' : addBox('dream', 'One dream per line…')}</div>
+      <div class="card"><h2>High school playlist <small>${p.songs.length ? 'as listed in 2007' : 'none on file — up to 5 songs, one per line'}</small></h2>${p.songs.length ? '<ol class="list">' + p.songs.map(d => '<li>' + esc(d) + '</li>').join('') + '</ol>' : addBox('song', 'Song — Artist, one per line…')}</div>
+    </div>`;
+  const on = (id, f) => { const el = $('#' + id); if (el) el.onclick = f; };
+  const adder = (kind, fn, key) => on(kind + 'Add', async () => {
+    const lines = $('#' + kind + 'New').value.split('\n').map(x => x.trim()).filter(Boolean); if (!lines.length) return toast('Write at least one line.', true);
+    $('#' + kind + 'Add').disabled = true;
+    try { PROFILE[key] = await run(fn, p.id, lines); keep(PROFILE); toast('Added ' + lines.length + ' to ' + (p.display_name || p.id) + "'s " + (key === 'dreams' ? 'dreams' : 'playlist')); renderPanel(); }
+    catch (e) { toast(e.message || String(e), true); $('#' + kind + 'Add').disabled = false; }
+  });
+  adder('dream', 'apiAddDreams', 'dreams'); adder('song', 'apiAddSongs', 'songs');
+  const bd = $('#panel input.bday'); if (bd) bd.onclick = () => openBirthday(bd);
+  on('edit', () => { EDIT = true; renderPanel(); });
+  on('cancel', () => { EDIT = false; renderPanel(); });
+  const pf = $('#photoFile'); if (pf) pf.onchange = async () => {
+    const f = pf.files[0]; if (!f) return;
+    try {
+      toast('Preparing the photo…');
+      const dataUrl = await shrinkImage(f, 600, 750);          /* keep uploads small: 4:5 at most 600 × 750 */
+      const r = await run('apiUploadPhoto', p.id, dataUrl);
+      PROFILE.photo_url = r.url; keep(PROFILE); await refresh(); renderPanel(); toast('Photo added for ' + (p.display_name || p.id));
+    } catch (e) { toast(e.message || String(e), true); }
+  };
+  const inl = [...document.querySelectorAll('#panel .inline')];
+  const quickVis = () => { const q = $('#quick'); if (q) q.classList.toggle('hidden', !inl.some(el => el.value.trim())); };
+  inl.forEach(el => { el.oninput = quickVis; if (el.classList.contains('bday')) el.onclick = () => openBirthday(el, quickVis); });
+  on('quick', async () => {
+    const fields = {}; inl.forEach(el => { if (el.value.trim()) fields[el.dataset.q] = el.value.trim(); });
+    if (!Object.keys(fields).length) return;
+    $('#quick').disabled = true;
+    try { PROFILE = await run('apiSaveProfile', p.id, fields); keep(PROFILE); await refresh(); renderPanel(); toast('Added ' + Object.keys(fields).map(k => LABELS[k].toLowerCase()).join(', ') + ' for ' + (PROFILE.display_name || p.id)); }
+    catch (e) { toast(e.message || String(e), true); $('#quick').disabled = false; }
+  });
+  on('save', async () => {
+    const fields = {}; document.querySelectorAll('#panel [data-k]').forEach(el => fields[el.dataset.k] = el.value);
+    $('#save').disabled = true;
+    try { PROFILE = await run('apiSaveProfile', p.id, fields); keep(PROFILE); await refresh(); EDIT = false; renderPanel(); toast('Saved ' + (PROFILE.display_name || p.id)); }
+    catch (e) { toast(e.message || String(e), true); $('#save').disabled = false; }
+  });
+  $('#panel').querySelectorAll('.opt').forEach(b => b.onclick = () => { const y = +b.dataset.y; CHOICES[y] = CHOICES[y] === b.dataset.s ? '' : b.dataset.s; renderPanel(); });
+  on('sClear', () => { CHOICES = {}; renderPanel(); });
+  on('sSubmit', async () => {
+    const send = {}; [1, 2, 3, 4].forEach(y => { if (CHOICES[y] && CHOICES[y] !== have[y]) send[y] = CHOICES[y]; });
+    if (!Object.keys(send).length) return toast('Nothing new to save — tap a section first.', true);
+    $('#sSubmit').disabled = true;
+    try {
+      const r = await run('apiSaveSections', p.id, send);
+      DATA.yearSections[p.id] = Object.assign({}, have, send); PROFILE.years = Object.assign({}, PROFILE.years, send); keep(PROFILE);
+      if (send[4]) { PROFILE.section = send[4]; await refresh(); }
+      toast('Saved ' + r.written + ' section' + (r.written === 1 ? '' : 's') + ' for ' + (p.display_name || p.id));
+      renderFaces(); renderPanel();
+    } catch (e) { toast(e.message || String(e), true); renderPanel(); }
+  });
+}
+
+/* ---------- photo upload helper: downsize in the browser, send as JPEG ---------- */
+function shrinkImage(file, maxW, maxH) {
+  return new Promise((res, rej) => {
+    const img = new Image(); const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const k = Math.min(1, maxW / img.width, maxH / img.height), w = Math.round(img.width * k), h = Math.round(img.height * k);
+      const c = document.createElement('canvas'); c.width = w; c.height = h; c.getContext('2d').drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url); res(c.toDataURL('image/jpeg', 0.88));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); rej(new Error('That file is not an image.')); };
+    img.src = url;
+  });
+}
+
+/* ---------- birthday picker: year · month · day · OK ---------- */
+const BD = { years: [1989, 1990, 1991, 1992], months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'], y: null, m: null, d: null, target: null };
+const daysIn = (y, m) => new Date(y || 1991, m + 1, 0).getDate();
+function openBirthday(input, after) {
+  BD.target = input; BD.after = after || null; BD.y = BD.m = BD.d = null;
+  const mt = String(input.value || '').match(/^([A-Za-z]+)\s+(\d{1,2}),?\s+(\d{4})/);
+  if (mt) { const mi = BD.months.findIndex(x => x.toLowerCase().startsWith(mt[1].toLowerCase().slice(0, 3))); if (mi >= 0) BD.m = mi; BD.d = +mt[2]; if (BD.years.includes(+mt[3])) BD.y = +mt[3]; }
+  renderBirthday(); $('#bdModal').classList.add('show');
+}
+function renderBirthday() {
+  $('#bdYears').innerHTML = BD.years.map(y => `<button class="opt${BD.y === y ? ' on' : ''}" data-y="${y}">${y}</button>`).join('');
+  $('#bdMonths').innerHTML = BD.months.map((m, i) => `<button class="opt${BD.m === i ? ' on' : ''}" data-m="${i}">${m.slice(0, 3)}</button>`).join('');
+  const n = BD.m === null ? 31 : daysIn(BD.y, BD.m);
+  $('#bdDays').innerHTML = Array.from({ length: 31 }, (_, i) => i + 1).map(d => `<button class="opt${BD.d === d ? ' on' : ''}${d > n ? ' off' : ''}" data-d="${d}">${d}</button>`).join('');
+  if (BD.d > n) BD.d = null;
+  $('#bdPreview').textContent = (BD.m !== null && BD.d && BD.y) ? `${BD.months[BD.m]} ${BD.d}, ${BD.y}` : 'pick a year, a month and a day';
+  $('#bdOk').disabled = !(BD.m !== null && BD.d && BD.y);
+  $('#bdYears').querySelectorAll('.opt').forEach(b => b.onclick = () => { BD.y = +b.dataset.y; renderBirthday(); });
+  $('#bdMonths').querySelectorAll('.opt').forEach(b => b.onclick = () => { BD.m = +b.dataset.m; renderBirthday(); });
+  $('#bdDays').querySelectorAll('.opt').forEach(b => b.onclick = () => { BD.d = +b.dataset.d; renderBirthday(); });
+}
+const closeBirthday = () => $('#bdModal').classList.remove('show');
+$('#bdOk').onclick = () => { if (BD.target) BD.target.value = `${BD.months[BD.m]} ${BD.d}, ${BD.y}`; closeBirthday(); if (BD.after) BD.after(); };
+$('#bdClear').onclick = () => { if (BD.target) BD.target.value = ''; closeBirthday(); if (BD.after) BD.after(); };
+$('#bdCancel').onclick = closeBirthday;
+$('#bdModal').onclick = e => { if (e.target === $('#bdModal')) closeBirthday(); };
+
+/* ---------- views ---------- */
+let VIEW = 'teachers';
+function showView(v) {
+  VIEW = v; document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.view === v));
+  const ready = v === 'teachers' || !!DATA;   /* the batch views wait for the batch download; the teachers view never does */
+  $('#view-teachers').classList.toggle('hidden', v !== 'teachers');
+  $('#view-testi').classList.toggle('hidden', v !== 'testi' || !ready); $('#view-profiles').classList.toggle('hidden', v !== 'profiles' || !ready);
+  $('#loading').classList.toggle('hidden', ready);
+  document.querySelector('main').classList.toggle('fit', v === 'testi' && ready);
+  try { localStorage.setItem('bidlisiw.view2', v); } catch (e) { }
+  setStats();
+}
+$('#tabs').onclick = e => { const t = e.target.closest('.tab'); if (t) showView(t.dataset.view); };
+
+/* ---------- this browser's identity: one device, one batchmate ---------- */
+const DEV_KEY = 'bidlisiw.device', ME_KEY = 'bidlisiw.me';
+/* saved browser data can be wiped (private windows, cleared history); so besides what the browser can save,
+   the device is also recognised by what it looks like (screen, language, time zone, browser family) */
+function fingerprint() {
+  const ua = navigator.userAgent.replace(/[\d.]+/g, '');   /* browser family without version numbers, so updates don't change it */
+  const parts = [ua, screen.width + 'x' + screen.height + 'x' + screen.colorDepth, devicePixelRatio, Intl.DateTimeFormat().resolvedOptions().timeZone, (navigator.languages || [navigator.language]).join(','), navigator.hardwareConcurrency || '', navigator.deviceMemory || '', navigator.platform || '', navigator.maxTouchPoints || 0];
+  let h = 0x811c9dc5; const str = parts.join('|'); for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+  let h2 = 0; for (let i = str.length - 1; i >= 0; i--) h2 = (Math.imul(h2, 31) + str.charCodeAt(i)) >>> 0;
+  return 'f-' + h.toString(36) + h2.toString(36);
+}
+const FP = fingerprint();
+function deviceId() {
+  let d = null; try { d = localStorage.getItem(DEV_KEY); } catch (e) { }
+  if (!d) { d = 'd-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10); try { localStorage.setItem(DEV_KEY, d); } catch (e) { } }
+  return d;
+}
+const DEVICE = deviceId();
+let ME = null, LOCKED = false, TO = null, GIVEN_LOCAL = {};
+const readMe = () => { try { return localStorage.getItem(ME_KEY) || null; } catch (e) { return null; } };
+const lockMe = id => { LOCKED = true; try { localStorage.setItem(ME_KEY, id); } catch (e) { } };
+
+/* ---------- the testimonial flow ---------- */
+const given = id => new Set([...(DATA.given && DATA.given[id] || []), ...(GIVEN_LOCAL[id] || [])]);
+const hasMsg = id => !!((DATA.hasMessage && DATA.hasMessage[id]) || (DATA.profiles && DATA.profiles[id] && DATA.profiles[id].message_to_batch));
+/* re-render a grid without snapping: tiles that stay are kept (so their selection/greying transitions run) and
+   slide to their new spot; tiles that arrive fade in; tiles that leave just go */
+function morph(container, html) {
+  const before = new Map(); [...container.children].forEach(el => { if (el.dataset.id) before.set(el.dataset.id, { el, r: el.getBoundingClientRect() }); });
+  const tpl = document.createElement('div'); tpl.innerHTML = html;
+  const frag = document.createDocumentFragment(), kept = new Set();
+  [...tpl.children].forEach(n => { const id = n.dataset.id, old = id && before.get(id); if (old) { old.el.className = n.className; frag.append(old.el); kept.add(id); } else frag.append(n); });
+  container.replaceChildren(frag);
+  const kids = [...container.children];
+  kids.forEach(el => {
+    const id = el.dataset.id, a = el.getBoundingClientRect(); el.style.transition = 'none';
+    if (id && kept.has(id)) { const o = before.get(id).r, dx = o.left - a.left, dy = o.top - a.top; if (dx || dy) el.style.transform = `translate(${dx}px,${dy}px)`; }
+    else { el.style.opacity = '0'; el.style.transform = 'scale(.85)'; }
+  });
+  void container.offsetWidth;
+  requestAnimationFrame(() => kids.forEach(el => { el.style.transition = ''; el.style.transform = ''; el.style.opacity = ''; }));
+}
+function faceCard(p, cls) { return `<div class="face${cls ? ' ' + cls : ''}" data-id="${esc(p.id)}">${avatar(p)}<b title="${esc(p.name)}">${esc(p.display)}</b></div>`; }
+function renderStep1() {
+  const q = $('#q1').value.toLowerCase();
+  const list = DATA.students.filter(p => !q || p.display.toLowerCase().includes(q) || p.name.toLowerCase().includes(q) || p.id.includes(q));
+  morph($('#faces1'), list.map(p => faceCard(p)).join('') || '<div class="muted">No one by that name.</div>');
+  $('#faces1').querySelectorAll('.face').forEach(el => el.onclick = () => chooseMe(el.dataset.id, true));
+}
+$('#q1').oninput = renderStep1;
+/* change an element's contents while its height eases from the old size to the new one */
+function settle(el, change) {
+  const h0 = el.offsetHeight; change(); const h1 = el.offsetHeight; if (h0 === h1 || matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  el.style.height = h0 + 'px'; el.style.overflow = 'hidden'; el.style.transition = 'none'; void el.offsetWidth;
+  el.style.transition = 'height .45s cubic-bezier(.2,.7,.2,1)'; el.style.height = h1 + 'px';
+  const done = () => { el.style.height = ''; el.style.overflow = ''; el.style.transition = ''; el.removeEventListener('transitionend', done); }; el.addEventListener('transitionend', done); setTimeout(done, 600);
+}
+function chooseMe(id, jump) {
+  ME = id; const p = student(id);
+  settle($('#s1'), () => { $('#s1pick').classList.add('hidden'); $('#s1me').classList.remove('hidden'); $('#s1').classList.add('done'); });
+  const msg = (DATA.profiles && DATA.profiles[id] && DATA.profiles[id].message_to_batch) || '';
+  const msgHTML = msg
+    ? `<h4>Message to the batch <span class="lock">on file since 2007</span></h4><p class="txt">${esc(msg)}</p>`
+    : `<h4>Your message to the batch <span class="lock">none on file yet</span></h4><textarea class="para" id="msgText" placeholder="In 2007 everyone left a message to the batch. Yours is missing — write it here."></textarea><div class="row"><span class="count" id="msgCount">0 words</span><button class="btn p" id="msgSave">Save my message</button></div>`;
+  $('#s1me').innerHTML = `<div class="id">${avatar(p)}<div><div class="who">${esc(p.display)}</div><p class="sub">${esc(p.name)}</p></div></div><div class="msg">${msgHTML}</div>` +
+    (LOCKED ? `<span class="lockd">this device is yours</span>` : `<button class="btn g chg" id="chgMe">Not you?</button>`);
+  const c = $('#chgMe'); if (c) c.onclick = () => { ME = null; TO = null; $('#s3').classList.add('hidden'); settle($('#s1'), () => { $('#s1pick').classList.remove('hidden'); $('#s1me').classList.add('hidden'); $('#s1').classList.remove('done'); }); };
+  const ta = $('#msgText');
+  if (ta) {
+    ta.oninput = () => { const n = (ta.value.trim().match(/\S+/g) || []).length; $('#msgCount').textContent = n + (n === 1 ? ' word' : ' words'); };
+    $('#msgSave').onclick = async () => {
+      const text = ta.value.trim(); if (!text) { toast('Write your message first.', true); return; }
+      const b = $('#msgSave'); b.disabled = true;
+      try {
+        await run('apiSaveMessage', ME, text, DEVICE, navigator.userAgent, FP);
+        lockMe(ME); (DATA.hasMessage = DATA.hasMessage || {})[ME] = true; if (DATA.profiles && DATA.profiles[ME]) DATA.profiles[ME].message_to_batch = text; remember(DATA);
+        toast('Saved. Thank you, ' + student(ME).display + '.'); chooseMe(ME);
+      } catch (e) { toast(e.message || String(e), true); b.disabled = false; }
+    };
+  }
+  $('#s3').classList.remove('hidden'); renderStep3();
+  /* phones: once someone says who they are, glide down to the batchmates they have already written to (or the list, if none yet) */
+  if (jump && window.innerWidth < 860) setTimeout(() => { const t = $('#old2007').classList.contains('hidden') ? $('#s3') : $('#old2007'); scrollTo({ top: scrollY + t.getBoundingClientRect().top - 12, behavior: 'smooth' }); }, 650);   /* after the card above has finished resizing */
+}
+const given2007 = id => new Set((DATA.given2007 && DATA.given2007[id]) || []);
+function renderStep3() {
+  const q = $('#q3').value.toLowerCase(), old = given2007(ME), now = given(ME);
+  /* everyone this writer has already written about, whenever that was, sits in one group: nothing tells the old from the new */
+  const was = DATA.students.filter(p => p.id !== ME && (old.has(p.id) || now.has(p.id)));
+  $('#old2007').classList.toggle('hidden', !was.length); $('#write').classList.toggle('no2007', !was.length);
+  morph($('#faces2007'), was.map(p => faceCard(p)).join(''));
+  $('#remainH').textContent = was.length ? 'The rest of the batch' : 'Pick a batchmate';
+  const list = DATA.students.filter(p => p.id !== ME && !old.has(p.id) && !now.has(p.id) && (!q || p.display.toLowerCase().includes(q) || p.name.toLowerCase().includes(q) || p.id.includes(q)));
+  morph($('#faces3'), list.map(p => faceCard(p, p.id === TO ? 'sel' : '')).join('') || (list.length || q ? '<div class="muted">No one by that name.</div>' : '<div class="muted">You have written to everyone. Salamat!</div>'));
+  $('#faces3').querySelectorAll('.face').forEach(el => el.onclick = () => { if (TO === el.dataset.id) return; TO = el.dataset.id; renderStep3(); renderEditor(); if (window.innerWidth < 860) $('#editor').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+  const tot = DATA.students.length - 1;
+  $('#progress').textContent = was.length ? `${was.length} of ${tot}` : '';
+}
+$('#q3').oninput = renderStep3;
+function renderEditor() {
+  const p = student(TO);
+  $('#editor').innerHTML = `<div class="to">${avatar(p)}<div><b>To ${esc(p.display)}</b><small>${esc(p.name)}</small></div></div>
+    <textarea class="para" id="tText" placeholder="If you had left a message for ${esc(p.display)} 19 years ago (2007), what could it have been?"></textarea>
+    <div class="row"><span class="count" id="tCount">0 words</span><button class="btn g" id="tCancel">Cancel</button><button class="btn p" id="tSend">Send to ${esc(p.display)}</button></div>`;
+  const ta = $('#tText'); ta.oninput = () => { const n = (ta.value.trim().match(/\S+/g) || []).length; $('#tCount').textContent = n + (n === 1 ? ' word' : ' words'); }; ta.focus();
+  $('#tCancel').onclick = () => { TO = null; $('#editor').innerHTML = '<div class="empty" style="padding:30px 10px">Pick a batchmate on the left, then write.</div>'; renderStep3(); };
+  $('#tSend').onclick = async () => {
+    const text = ta.value.trim(); if (!text) { toast('Write the testimonial first.', true); return; }
+    const b = $('#tSend'); b.disabled = true; $('#tCancel').disabled = true;
+    try {
+      const r = await run('apiAddTestimonial', TO, ME, text, DEVICE, navigator.userAgent, FP);
+      lockMe(ME); (GIVEN_LOCAL[ME] = GIVEN_LOCAL[ME] || []).push(TO);
+      toast('Sent to ' + r.about + '. Salamat!'); const done = TO; TO = null;
+      $('#editor').innerHTML = `<div class="empty" style="padding:30px 10px">Your testimonial for ${esc(student(done).display)} is in. Pick the next batchmate.</div>`;
+      renderStep3(); chooseMe(ME);
+    } catch (e) { toast(e.message || String(e), true); b.disabled = false; $('#tCancel').disabled = false; }
+  };
+}
+/* a device that has written before opens as that person; if its row was removed from the Devices sheet, it is free again.
+   Always asked of the server, because the browser's own memory of it may be gone. */
+async function restoreMe() {
+  const saved = readMe();
+  try {
+    const who = await run('apiWhoAmI', DEVICE, FP);
+    if (who && who.id && student(who.id).id) { LOCKED = true; chooseMe(who.id); return; }
+    if (saved) { try { localStorage.removeItem(ME_KEY); } catch (e) { } }
+  } catch (e) { if (saved && student(saved).id) { LOCKED = true; chooseMe(saved); } }   /* offline: trust what the browser remembers */
+}
+
+/* ---------- teachers (main view) ---------- */
+let TDATA = null, TSEL = null, TEDIT = false;
+const YR = ['', 'I', 'II', 'III', 'IV'];
+const TLS_KEY = 'bidlisiw.teachers.v1';
+const rememberT = () => { try { localStorage.setItem(TLS_KEY, JSON.stringify(TDATA)); } catch (e) { } };
+const recallT = () => { try { const x = JSON.parse(localStorage.getItem(TLS_KEY) || 'null'); return x && x.teachers ? x : null; } catch (e) { return null; } };
+const teacher = code => (TDATA && TDATA.teachers.find(t => t.code === code)) || null;
+const fullName = t => [t.first, t.last].filter(Boolean).join(' ') || t.code;
+/* the nickname shows under the name unless it is just the first name again */
+const nickOf = t => t.nick && t.nick.toLowerCase() !== (t.first || '').toLowerCase() ? t.nick : '';
+const tAv = t => ({ id: 't:' + t.code, photo: t.photo, display: fullName(t) });
+function putTeacher(t) { if (!t || !TDATA) return; const i = TDATA.teachers.findIndex(x => x.code === t.code); if (i >= 0) TDATA.teachers[i] = t; else TDATA.teachers.push(t); rememberT(); }
+function renderTeachers() {
+  const q = $('#tq').value.toLowerCase();
+  const list = TDATA.teachers.slice().sort((a, b) => (a.last + ' ' + a.first).localeCompare(b.last + ' ' + b.first))
+    .filter(t => !q || [t.first, t.last, t.nick, t.code].some(x => String(x || '').toLowerCase().includes(q)));
+  morph($('#tfaces'), list.map(t => { const n = nickOf(t), c = t.subjects.length;
+    return `<div class="face tf${t.code === TSEL ? ' sel' : ''}" data-id="${esc(t.code)}">${avatar(tAv(t))}<b title="${esc(fullName(t))}">${esc(fullName(t))}</b>${n ? `<em class="nk">“${esc(n)}”</em>` : ''}<span class="cnt">${c ? c + ' subject' + (c === 1 ? '' : 's') : '&nbsp;'}</span></div>`; }).join('') || '<div class="muted">No teacher by that name.</div>');
+  $('#tfaces').querySelectorAll('.face').forEach(el => el.onclick = () => openTeacher(el.dataset.id));
+  setStats();
+}
+$('#tq').oninput = renderTeachers;
+function openTeacher(code) {
+  if (TEDIT && TSEL !== code && !confirmLeave()) return;
+  TSEL = code; TEDIT = false; renderTeachers(); renderTPanel();
+  $('#tplaceholder').classList.add('hidden');
+  if (window.innerWidth < 960) $('#tdetail').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+const confirmLeave = () => !document.querySelector('#tpanel input:not([readonly])') || ![...document.querySelectorAll('#tpanel .tn input')].some(x => x.defaultValue !== x.value) || window.confirm('Leave without saving the name changes?');
+const yrPills = (sel, attr) => `<div class="yrs">${[1, 2, 3, 4].map(y => `<button class="opt${+sel === y ? ' on' : ''}" ${attr}="${y}" title="Year ${YR[y]}">${YR[y]}</button>`).join('')}</div>`;
+function renderTPanel() {
+  const t = teacher(TSEL); if (!t) { $('#tpanel').innerHTML = ''; return; }
+  const nick = nickOf(t), subs = t.subjects;
+  const all = [...new Set(TDATA.teachers.flatMap(x => x.subjects.map(s => s.subject)))].sort();
+  const names = TEDIT
+    ? `<div class="facts tn"><b>First name</b><input data-k="first_name" value="${esc(t.first)}"><b>Last name</b><input data-k="last_name" value="${esc(t.last)}"><b>Nickname</b><input data-k="nickname" value="${esc(t.nick)}" placeholder="what the batch called this teacher"></div>
+       <div class="row"><button class="btn p" id="tSave">Save names</button><button class="btn g" id="tCancel">Cancel</button></div>`
+    : `<div class="facts"><b>First name</b><span>${t.first ? esc(t.first) : '<span class="blank">—</span>'}</span><b>Last name</b><span>${t.last ? esc(t.last) : '<span class="blank">—</span>'}</span><b>Nickname</b><span>${t.nick ? esc(t.nick) : '<span class="blank">—</span>'}</span></div>
+       <div class="row"><button class="btn g" id="tEdit">Edit names</button></div>`;
+  $('#tpanel').innerHTML = `
+    <div class="card">
+      <div class="pf">
+        <div class="photo">${avatar(tAv(t))}</div>
+        <div>
+          <p class="tcode">${esc(t.code)}</p>
+          <p class="name">${esc(fullName(t))}</p>
+          ${nick ? `<p class="tnick">“${esc(nick)}”</p>` : '<p class="tnick">&nbsp;</p>'}
+          ${names}
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Subjects taught <small>${subs.length ? subs.length + ' listed · one teacher can have several, at different year levels' : 'none listed yet — add them below'}</small></h2>
+      <div class="slist">${subs.map(s => `<div class="srow" data-id="${esc(s.id)}"><input value="${esc(s.subject)}" list="subjList" data-v="${esc(s.subject)}">${yrPills(s.year, 'data-y')}<div class="sbtns"><button class="btn p hidden" data-act="save">Save</button><button class="btn x" data-act="del">Remove</button></div></div>`).join('')}
+        <div class="srow add"><input id="sNew" list="subjList" placeholder="Add a subject, e.g. Chemistry">${yrPills(0, 'data-ny')}<div class="sbtns"><button class="btn p" id="sAdd">Add subject</button></div></div>
+      </div>
+      <datalist id="subjList">${all.map(x => `<option value="${esc(x)}">`).join('')}</datalist>
+    </div>
+    ${testiCard(t)}`;
+  wireTesti(t);
+  const on = (id, f) => { const el = $('#' + id); if (el) el.onclick = f; };
+  on('tEdit', () => { TEDIT = true; renderTPanel(); const f = $('#tpanel .tn input'); if (f) f.focus(); });
+  on('tCancel', () => { TEDIT = false; renderTPanel(); });
+  on('tSave', async () => {
+    const fields = {}; document.querySelectorAll('#tpanel .tn [data-k]').forEach(el => fields[el.dataset.k] = el.value.trim());
+    if (!fields.first_name && !fields.last_name) return toast('Type at least a first or last name.', true);
+    $('#tSave').disabled = true;
+    try { const r = await run('apiSaveTeacher', t.code, fields); putTeacher(r); TEDIT = false; renderTeachers(); renderTPanel(); toast('Saved ' + fullName(r)); }
+    catch (e) { toast(e.message || String(e), true); $('#tSave').disabled = false; }
+  });
+  /* existing subject rows: change the text or the year → Save appears; Remove asks once more before deleting */
+  $('#tpanel').querySelectorAll('.srow[data-id]').forEach(row => {
+    const inp = row.querySelector('input'), save = row.querySelector('[data-act=save]'), del = row.querySelector('[data-act=del]');
+    const orig = { s: inp.dataset.v, y: +(row.querySelector('.yrs .opt.on') || {}).dataset?.y || 0 };
+    let yr = orig.y;
+    const dirty = () => save.classList.toggle('hidden', inp.value.trim() === orig.s && yr === orig.y);
+    inp.oninput = dirty;
+    row.querySelectorAll('.yrs .opt').forEach(b => b.onclick = () => { yr = +b.dataset.y; row.querySelectorAll('.yrs .opt').forEach(x => x.classList.toggle('on', x === b)); dirty(); });
+    save.onclick = async () => {
+      if (!inp.value.trim()) return toast('Type the subject.', true);
+      save.disabled = true;
+      try { const r = await run('apiUpdateTeacherSubject', row.dataset.id, inp.value.trim(), yr); putTeacher(r); renderTeachers(); renderTPanel(); toast('Updated'); }
+      catch (e) { toast(e.message || String(e), true); save.disabled = false; }
+    };
+    del.onclick = async () => {
+      if (!del.classList.contains('sure')) { del.classList.add('sure'); del.textContent = 'Sure?'; clearTimeout(del._t); del._t = setTimeout(() => { del.classList.remove('sure'); del.textContent = 'Remove'; }, 3000); return; }
+      del.disabled = true; row.style.opacity = '.4';
+      try { const r = await run('apiDeleteTeacherSubject', row.dataset.id); putTeacher(r); renderTeachers(); renderTPanel(); toast('Removed'); }
+      catch (e) { toast(e.message || String(e), true); del.disabled = false; row.style.opacity = ''; }
+    };
+  });
+  /* the add row */
+  let ny = 0;
+  $('#tpanel').querySelectorAll('[data-ny]').forEach(b => b.onclick = () => { ny = +b.dataset.ny; $('#tpanel').querySelectorAll('[data-ny]').forEach(x => x.classList.toggle('on', x === b)); });
+  const add = async () => {
+    const subj = $('#sNew').value.trim();
+    if (!subj) return toast('Type the subject first.', true);
+    if (!ny) return toast('Tap the year level (I, II, III or IV).', true);
+    $('#sAdd').disabled = true;
+    try { const r = await run('apiAddTeacherSubject', t.code, subj, ny); putTeacher(r); renderTeachers(); renderTPanel(); toast('Added ' + subj + ' · year ' + YR[ny]); const n = $('#sNew'); if (n) n.focus(); }
+    catch (e) { toast(e.message || String(e), true); $('#sAdd').disabled = false; }
+  };
+  on('sAdd', add); $('#sNew').onkeydown = e => { if (e.key === 'Enter') add(); };
+}
+/* ---------- a batchmate's testimonial for a teacher: pick who is writing, write once; nobody sees the others' texts ---------- */
+let WHO = null, TWRITER = null; const TTDRAFT = {};
+const studentsT = () => (TDATA && TDATA.students) || (DATA && DATA.students) || [];
+const stuT = id => studentsT().find(x => x.id === id) || null;
+function testiCard(t) {
+  const call = nickOf(t) || fullName(t), wrote = new Set(t.wrote || []);
+  const who = WHO || TWRITER, me = who && stuT(who);
+  const opts = studentsT().slice().sort((a, b) => a.display.localeCompare(b.display))
+    .map(x => `<option value="${esc(x.id)}"${x.id === who ? ' selected' : ''}${wrote.has(x.id) && x.id !== who ? ' disabled' : ''}>${esc(x.display)}${x.name ? ' — ' + esc(x.name) : ''}${wrote.has(x.id) ? '  ✓ already wrote' : ''}</option>`).join('');
+  const done = who && wrote.has(who);
+  return `<div class="card" id="tcard">
+    <h2>Leave a testimonial <small>for ${esc(call)} · one per batchmate · what others wrote stays private</small></h2>
+    <div class="twho"><label for="twho">Who is writing?</label>
+      <select id="twho"${WHO ? ' disabled title="this device is registered to you"' : ''}><option value="">— pick your name —</option>${opts}</select>${WHO ? '<span class="lockd">this device is yours</span>' : ''}</div>
+    ${done ? `<div class="tdone">${esc(me ? me.display : '')}, your testimonial for ${esc(call)} is in. It can be written only once — salamat!</div>`
+      : `<div class="tbox${me ? ' on' : ''}"><div class="tav">${me ? avatar(me) : ''}</div>
+         <textarea class="para" id="ttText" ${me ? '' : 'disabled'} placeholder="${me ? `What would you like to tell ${esc(call)}?` : 'Pick your name first.'}">${esc(TTDRAFT[t.code] || '')}</textarea></div>
+         <div class="row"><span class="count" id="ttCount">0 words</span><button class="btn p" id="ttSend"${me ? '' : ' disabled'}>Send to ${esc(call)}</button></div>`}
+  </div>`;
+}
+function wireTesti(t) {
+  const sel = $('#twho'); if (!sel) return;
+  sel.onchange = () => { TWRITER = sel.value || null; const y = scrollY; renderTPanel(); scrollTo(0, y); const ta = $('#ttText'); if (ta && !ta.disabled) ta.focus(); };
+  const ta = $('#ttText'); if (!ta) return;
+  const count = () => { const n = (ta.value.trim().match(/\S+/g) || []).length; $('#ttCount').textContent = n + (n === 1 ? ' word' : ' words'); };
+  ta.oninput = () => { TTDRAFT[t.code] = ta.value; count(); }; count();
+  $('#ttSend').onclick = async () => {
+    const who = WHO || TWRITER, text = ta.value.trim();
+    if (!who) return toast('Pick your name first.', true);
+    if (!text) return toast('Write the testimonial first.', true);
+    const b = $('#ttSend'); b.disabled = true;
+    try {
+      await run('apiAddTeacherTestimonial', t.code, who, text, DEVICE, navigator.userAgent, FP);
+      lockMe(who); WHO = who; delete TTDRAFT[t.code];
+      (t.wrote = t.wrote || []).push(who); putTeacher(t);
+      toast('Sent to ' + (nickOf(t) || fullName(t)) + '. Salamat!'); renderTPanel(); if (DATA && !ME) chooseMe(who);
+    } catch (e) { toast(e.message || String(e), true); b.disabled = false; }
+  };
+}
+
+async function refreshT() {
+  const d = await run('apiTeachers'); TDATA = d; rememberT(); renderTeachers();
+  if (TSEL && !TEDIT && !isTyping()) renderTPanel();
+}
+
+/* ---------- boot + keeping in step with everyone else ---------- */
+const LS_KEY = 'bidlisiw.all.v2';
+function keep(p) { if (DATA && p && p.id) { (DATA.profiles = DATA.profiles || {})[p.id] = p; remember(DATA); } }
+const remember = d => { try { localStorage.setItem(LS_KEY, JSON.stringify({ t: Date.now(), d })); } catch (e) { } };
+const recall = () => { try { const x = JSON.parse(localStorage.getItem(LS_KEY) || 'null'); return x && x.d && x.d.students ? x : null; } catch (e) { return null; } };
+async function refresh() { const d = await run('apiBootstrap'); DATA = d; remember(d); renderFaces(); preload(); if (ME && !$('#s3').classList.contains('hidden') && !TO) renderStep3(); }
+/* fetch every portrait once in the background so the big photo on the right also appears instantly */
+const PRELOADED = new Set();
+function preload() { (DATA.students || []).forEach(p => { if (p.photo && !PRELOADED.has(p.photo)) { PRELOADED.add(p.photo); const im = new Image(); im.src = p.photo; } }); }
+const REFRESH_MS = 30000;   /* re-read the sheet every 30 s so edits by others show up; never while someone is mid-edit here */
+async function poll() {
+  if (document.hidden || EDIT || TEDIT || isTyping()) return;
+  if (VIEW === 'teachers') { try { await refreshT(); } catch (e) { } return; }
+  try {
+    await refresh();
+    if (SEL && !EDIT) { const fresh = DATA.profiles && DATA.profiles[SEL];
+      if (fresh && JSON.stringify(fresh) !== JSON.stringify(PROFILE) && !isTyping()) { PROFILE = fresh; renderPanel(); } }
+    $('#stats').title = 'last refreshed ' + new Date().toLocaleTimeString();
+  } catch (e) { /* quiet: next tick will try again */ }
+}
+const isTyping = () => [...document.querySelectorAll('#panel input, #panel textarea, #view-testi textarea, #tpanel input, #tpanel textarea')].some(x => x.value.trim() && !x.readOnly && x.defaultValue !== x.value);
+setInterval(poll, REFRESH_MS);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) poll(); });
+(async () => {
+  /* 1 · the teachers first: it is the main view and a small download */
+  let v = 'teachers'; try { v = localStorage.getItem('bidlisiw.view2') || 'teachers'; } catch (e) { }
+  showView(v);
+  const tsaved = recallT(); if (tsaved) { TDATA = tsaved; renderTeachers(); }   /* instant paint from the last visit */
+  try { TDATA = await run('apiTeachers'); rememberT(); renderTeachers(); if (TSEL) renderTPanel(); }
+  catch (e) { if (!TDATA) $('#tfaces').innerHTML = '<div class="loading">Could not load the teachers: ' + esc(e.message || e) + '</div>'; }
+  /* this device's batchmate, if it has written before, is filled in as the writer */
+  run('apiWhoAmI', DEVICE, FP).then(w => { if (w && w.id && stuT(w.id)) { WHO = w.id; LOCKED = true; if (TSEL && !isTyping()) renderTPanel(); } }).catch(() => { });
+  /* 2 · then the batch, quietly in the background, for the Testimonials and Profiles tabs */
+  try {
+    const saved = recall();
+    if (saved) { DATA = saved.d; showView(VIEW); renderFaces(); renderStep1(); }
+    DATA = await run('apiBootstrap'); remember(DATA);
+    showView(VIEW); renderFaces(); renderStep1(); preload();
+    if (SEL && DATA.profiles && DATA.profiles[SEL] && !EDIT) { PROFILE = DATA.profiles[SEL]; renderPanel(); }
+    await restoreMe();
+  } catch (e) { $('#loading').textContent = 'Could not load the batch: ' + (e.message || e); }
+})();
+</script>
+</body>
+</html>
