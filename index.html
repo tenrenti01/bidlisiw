@@ -4,6 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Bidlisiw · Batch 2007</title>
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#5e0f1b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Bidlisiw">
 <script src="config.js"></script>
 <style>
 :root{--crimson:#5e0f1b;--crimson-2:#8c1c2c;--gilt:#c99a3e;--gilt-l:#e3be65;--paper:#fbf6ea;--ink:#2b1d14;--ink-soft:#6e5a46;--line:#e6d9bd;--ok:#1e7b34;--bad:#c0392b;--sh:0 6px 18px rgba(60,30,10,.10),0 1px 3px rgba(60,30,10,.08)}
@@ -973,5 +981,6 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden) poll
   } catch (e) { $('#loading').textContent = 'Could not load the batch: ' + (e.message || e); }
 })();
 </script>
+<script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script>
 </body>
 </html>
