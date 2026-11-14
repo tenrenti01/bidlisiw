@@ -23,3 +23,7 @@ After changing `Code.gs` later: Deploy ▸ Manage deployments ▸ ✏️ ▸ Ver
 ## Custom domain (GoDaddy)
 DNS record at GoDaddy for pshscvc07.space: **CNAME · Name `inputs` · Value `tenrenti01.github.io.`**
 Then GitHub ▸ Settings ▸ Pages ▸ Custom domain shows `inputs.pshscvc07.space` ▸ tick **Enforce HTTPS** once it is offered.
+
+
+## The yearbook
+`yearbook.html` is the animated Bidlisiw yearbook as one self-contained file (photos, fonts and music player built in). It opens at https://inputs.pshscvc07.space/yearbook.html.
